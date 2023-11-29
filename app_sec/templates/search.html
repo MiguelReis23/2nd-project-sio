@@ -1,0 +1,80 @@
+{%extends "base.html"%}
+
+
+{%block styles%}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/search.css')}}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{%endblock%}
+
+
+
+{%block content%}
+<body>
+{%include "navbar.html"%}
+<h1>Product Search</h1>
+<form method="GET" action="{{ url_for('search.search_products') }}">
+    <input type="text" name="search" id="search" placeholder="Search for products:">
+    <button class="botao1"type="submit">
+        <i class='bx bx-search'></i>Search
+    </button>
+</form>
+<div class="container"
+    <h2 id="search_result"></h2>
+</div>
+<div class="container mt-3">
+    <div class="row">
+        <!-- Product cards will be inserted here -->
+    </div>
+
+{%endblock%}
+
+
+{%block scripts%}
+<script type="text/javascript">
+        // Listen for the form submission
+        $("form").submit(function (e) {
+            console.log("submit");
+            e.preventDefault(); // Prevent the default form submission
+
+            let search = $('#search').val(); // Get the search query
+
+            // Make an AJAX request to the Flask route
+            $.ajax({
+                url: "/search/products?search=" + search,
+                type: "GET",
+                success: function (data) {
+                    // Handle the response and generate HTML cards
+                    displayProductCards(data.results);
+
+                },
+            });
+        });
+
+        // Function to generate HTML cards from product data
+        function displayProductCards(products) {
+            let html = "";
+           $("#search_result").text("Search results for: " + $('#search').val());
+            html += '<div class="row">';
+            html += '<div class="col-12">';
+            html += "</div>";
+            for (let i = 0; i < products.length; i++) {
+                html += '<div class="col-12 col-sm-6 col-md-4 col-lg-3">';
+                html += '<div class="card">';
+                html += '<img class="card-img-top" src="static/assets/' + products[i].image + '">';
+                html += '<div class="card-body">';
+                html += '<h5 class="card-title">' + products[i].name + "</h5>";
+                html += '<p class="card-text">' + products[i].description + "</p>";
+                html += '<form action="/search/products/' + products[i].id + '" method="GET">';
+                html += '<button " class="btn btn-primary">View Product</a>';
+                html += "</form>";
+                html += "</div>";
+                html += "</div>";
+                html += "</div>";
+            }
+            // Insert the HTML into the page
+            $(".row").html(html);
+        }
+
+</script>
+{%endblock%}
+

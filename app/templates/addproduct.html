@@ -1,0 +1,42 @@
+{%extends 'base.html'%}
+
+{%block styles%}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/addproduct.css') }}">
+{%endblock%}
+
+
+{%block content%}
+
+{%for message in get_flashed_messages()%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{%endfor%}
+
+<!-- Form to add products -->
+<div class="checkout-container">
+    <div class="checkout-form">
+        <h1>Add Product</h1>
+        <form action="/cart/checkout/confirm" method="POST">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Category:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Description:</label>
+                <textarea id="address" name="address" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="credit-card">Preço:</label>
+                <input type="text" id="credit-card" name="credit-card" required>
+            </div>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
+</div>
+{%endblock%}

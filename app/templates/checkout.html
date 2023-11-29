@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+<!-- Load Navbar -->
+{% include 'navbar.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/payment.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+
+{%block content%}
+
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <h1>Checkout</h1>
+            <form action="/cart/checkout/confirm" method="POST">
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type="text" id="name" name="name" required>
+				</div>
+				<div class="form-group">
+					<label for="email">Email:</label>
+					<input type="email" id="email" name="email" required>
+				</div>
+				<div class="form-group">
+					<label for="address">Shipping Address:</label>
+					<textarea id="address" name="address" rows="4" required></textarea>
+				</div>
+				<div class="form-group">
+					<label for="credit-card">Credit Card Number:</label>
+					<input type="text" id="credit-card" name="credit-card" required>
+				</div>
+				<div class="form-group">
+					<label for="expiry">Expiry Date:</label>
+					<input type="text" id="expiry" name="expiry" placeholder="MM/YY" required>
+				</div>
+				<div class="form-group">
+					<label for="cvv">CVV:</label>
+					<input type="text" id="cvv" name="cvv" required>
+				</div>
+				<button type="submit">Place Order</button>
+			</form>
+        </div>
+    </div>
+</body>
+</html>
+{%endblock%}

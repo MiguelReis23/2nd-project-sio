@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
+
+<!-- Load Navbar -->
+{% include 'navbar.html' %}
+
+{% block content %}
+<body>
+    {%for message in get_flashed_messages()%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {%endfor%}
+<!-- Pagina login -->
+<form action="/login" method="post">
+    <div class="main">
+        <div class="log">
+            <h2>Log in to your account</h2>
+            <div class="textfield">
+                <label for="uname"><b>Username</b></label>
+                <input id= "username" type="text" placeholder="Enter Username" name="username" required>
+            </div>
+            <div class="textfield"> 
+                <label for="psw"><b>Password</b></label>
+                <input id="password" type="password" placeholder="Enter Password" name="password" required>
+            </div>
+            <button class="btn-login">Login</button>
+        </div>
+    </div>
+    <div class = "label">
+        <label for="NotRegistered">Not Registered Yet?
+            <a href="/register">Register</a>
+        </label>
+    </div>
+</form>
+</body>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+.card{
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background-color: #000000;
+    transition: all 0.3s ease-in-out;
+}
+.img.card-img-top{
+    width: 200px;
+    height: 200px;
+}
+
+form{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+form input{
+    width: 20%;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+    margin-left: 5px;
+    margin-right: 5px;
+    outline: none;
+}
+form button.botao1{
+    width: 6%;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 1px 0;
+    outline: none;
+    background-color: #f55a00;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+form button.botao1:hover{
+    background-color: #ff3300;
+}
+
+h1{
+    color: #ffffff;
+    text-align: center;
+    margin: 10px 0;
+}
+
+
+
+.view-product {
+    background-color: #f55a00;
+    color: #ffffff;
+    border: 0px solid #ffffff;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-product:hover {
+    background-color: #ff3300;
+}
+
+
+.add-to-cart {
+    background-color: #f55a00;
+    color: #ffffff;
+    border: 0px solid #ffffff;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.add-to-cart:hover {
+    background-color: #ff3300;
+}
+
+.add-to-favorites {
+    background-color :transparent; 
+    color: #ffff; 
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: background-color 0.3s;
+}
+.add-to-favorites:hover {
+    border-radius: 10px;
+    color: #fff;
+    background-color: #ff3300;
+}

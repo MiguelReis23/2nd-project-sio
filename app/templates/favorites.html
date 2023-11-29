@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+<!-- Load Navbar -->
+{% include 'navbar.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/favorite.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+
+{%block content%}
+
+</head>
+<body>
+    <header>
+        <h1>Favorites</h1>
+    </header>
+    <div class="row wishlist-container">
+        {%for product in product_details%}
+        <div class="wishlist-item col-md-12">
+            <img class="card-img-top" src="{{url_for('static',filename='assets/'+ product.image)}}" alt="{{product.name}}">
+                <h2 class="card-title">{{product.name}}</h2>
+                <p class="card-text">{{product.category.name}}</p>
+                <p class="card-price">{{product.price|int}}€</p>
+            <form action="/product/{{product.id}}" method="GET">
+                <button class="view-product">Ver Produto</button>
+            </form>
+            <form action="/favorites/remove/{{product.id}}" method="POST">
+            <button class="remove-button">Remove</button>
+            </form>
+        </div>
+        {%endfor%}
+    </div>
+</body>
+</html>
+
+
+{%endblock%}

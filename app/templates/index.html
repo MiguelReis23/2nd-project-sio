@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+<!-- Load Navbar -->
+{% include 'navbar.html' %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static',filename='css/index.css') }}"
+/>
+{% endblock %} {% block content %}
+
+<html>
+  <body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+    <header>
+      <h1>Deti Merch</h1>
+    </header>
+    <div class="row product-container">
+      {%for product in products%}
+
+      <div class="product col-md-12">
+        <img class="card-img-top"
+          src="{{url_for('static',filename='assets/'+ product.image)}}"
+          alt="{{product.name}}"
+        />
+        <h2 class="card-title">{{product.name}}</h2>
+        <p></p>
+        <p class="card-price">{{product.price|int}}€</p>
+        <form action="/product/{{product.id}}" method="GET">
+          <button class="view-product">View Product</button>
+        </form>
+        <form action="/cart/add/{{product.id}}" method="POST">
+          <button class="add-to-cart">
+            <i class="bx bx-cart-add"></i>Add to Cart
+          </button>
+        </form>
+        <form action="/favorites/add/{{product.id}}" method="POST">
+          <button class="add-to-favorites">&#9733;</button>
+        </form>
+      </div>
+      {%if loop.index % 3 == 0 and not loop.last%}
+    </div>
+    <div class="row product-container">{%endif%} {%endfor%}</div>
+  </body>
+</html>
+{% endblock %}
