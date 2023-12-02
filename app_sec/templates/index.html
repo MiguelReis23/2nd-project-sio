@@ -12,11 +12,13 @@
 
 <html>
 <body>
-    {% for message in get_flashed_messages() %}
-        <div class="alert alert-success" role="alert">
-            {{ message }}
+        <!-- Field for server messages-->
+        {%for message in get_flashed_messages()%}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-    {% endfor %}
+		{%endfor%}
     <header>
         <h1>Deti Merch</h1>
     </header>

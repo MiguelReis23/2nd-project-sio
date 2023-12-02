@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask
+from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask, session
 from flask_login import login_required, current_user    
 from app_sec.models import User
 from app_sec import db
@@ -46,14 +46,14 @@ def edit_profile():
     if old_password:
         if not check_password_hash(user.password, old_password):
             flash('Please check your password and try again.')
-            return redirect(url_for('profile.profile'))
+            return redirect(url_for('profile.edit_profile'))
 
     if new_password != confirm_new_password:
         flash('Passwords do not match.')
-        return redirect(url_for('profile.profile'))
-    elif new_password != old_password:
-        flash('Passwords do not match.')
-        return redirect(url_for('profile.profile'))
+        return redirect(url_for('profile.edit_profile'))
+    elif new_password == old_password:
+        flash('Password cannot be the same as the old one.')
+        return redirect(url_for('profile.edit_profile'))
     elif new_password == confirm_new_password:
         user.password = generate_password_hash(new_password, method='sha256')
 
@@ -74,9 +74,4 @@ def edit_profile():
     
     
     db.session.commit()
-
-    print("------------------")
-    print('User profile updated.')
-    print("------------------")
-
     return redirect(url_for('profile.profile'))
