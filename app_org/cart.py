@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask
 from flask_login import login_required, current_user    
-from app.models import User
-from app.models import Product
-from app.models import Cart
+from app_org.models import User
+from app_org.models import Product
+from app_org.models import Cart
 
 
-from app import db
+from app_org import db
 import os
 
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_user, logout_user, login_required, current_user, login_manager
-from app.models import User, Product
-from app import db
+from app_org.models import User, Product
+from app_org import db
 from flask import request, redirect, url_for
 import os
 main = Blueprint('main', __name__)

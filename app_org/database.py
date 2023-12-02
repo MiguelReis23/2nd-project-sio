@@ -1,8 +1,8 @@
 from flask import Blueprint,jsonify
-from app import db
-from app.models import User
-from app.models import Product
-from app.models import Category
+from app_org import db
+from app_org.models import User
+from app_org.models import Product
+from app_org.models import Category
 from werkzeug.security import generate_password_hash
 
 database = Blueprint('database', __name__)
