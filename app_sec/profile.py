@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from app_sec.models import User
 from app_sec import db
 import os
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 prof = Blueprint('profile', __name__)
 
@@ -37,15 +37,26 @@ def edit_profile():
  
     #password = request.form.get('password')
     user = User.query.filter_by(id=current_user.id).first()
+    old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
     print("AAAAA")
+
     
-    if new_password == confirm_new_password:
+    if old_password:
+        if not check_password_hash(user.password, old_password):
+            flash('Please check your password and try again.')
+            return redirect(url_for('profile.profile'))
+
+    if new_password != confirm_new_password:
+        flash('Passwords do not match.')
+        return redirect(url_for('profile.profile'))
+    elif new_password != old_password:
+        flash('Passwords do not match.')
+        return redirect(url_for('profile.profile'))
+    elif new_password == confirm_new_password:
         user.password = generate_password_hash(new_password, method='sha256')
-    else:
-        print('Passwords do not match.')
-        return render_template('profile.edit_profile', user=user)
+
     
     if email:
         user.email = email

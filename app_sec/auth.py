@@ -23,7 +23,7 @@ def login_post():
     user = User.query.filter_by(username=username).first()
 
     if not user:
-        flash('User does not exist.', 'error')
+        flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
 
     if user.failed_login_attempts >= 5:
