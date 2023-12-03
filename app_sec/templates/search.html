@@ -7,10 +7,17 @@
 {%endblock%}
 
 
-
-{%block content%}
-<body>
 {%include "navbar.html"%}
+
+<body>
+            <!-- Field for server messages-->
+            {%for message in get_flashed_messages()%}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {%endfor%}    
+{%block content%}
 <h1>Product Search</h1>
 <form method="GET" action="{{ url_for('search.search_products') }}">
     <input type="text" name="search" id="search" placeholder="Search for products:">
