@@ -4,7 +4,7 @@
 {% include 'navbar.html' %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/car.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/cart.css') }}">
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 {% endblock %}
 
@@ -16,14 +16,11 @@
 	<link rel="stylesheet" href="css/car.css">
 </head>
 <body>
-        <!-- Field for server messages-->
-        {%for message in get_flashed_messages()%}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-		{%endfor%}
-        
+	{% for message in get_flashed_messages() %}
+		<div class="alert alert-success" role="alert">
+			{{ message }}
+		</div>
+	{% endfor %}
 	<main>
 		<main>
 			<div class="page-title">Seu Carrinho</div>
@@ -84,7 +81,7 @@
 					<span>€</span>
 				  </footer>
 				</div>
-				<form action="/cart/checkout" method="POST">
+				<form class="botao" action="/cart/checkout" method="POST">
 				<button >Finalizar Compra</button>
 				</form>
 			  </aside>

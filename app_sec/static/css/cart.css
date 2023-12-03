@@ -1,4 +1,3 @@
-/* Style for shop cart */
 @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 * {
   margin: 0;
@@ -219,11 +218,11 @@ aside .box footer {
           justify-content: space-between;
 }
 
-aside > button {
+aside > .botao button {
   border: 0;
   padding: 15px 0;
   color: white;
-  background: #ffa600;
+  background: #f55a00;
   display: block;
   width: 100%;
   text-transform: uppercase;
@@ -231,6 +230,6 @@ aside > button {
   font-size: 16px;
 }
 
-aside > button:hover {
-  background: #ff9100;
+aside > .botao button:hover {
+  background: #ff3300;
 }
