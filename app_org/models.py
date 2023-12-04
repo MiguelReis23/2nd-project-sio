@@ -12,6 +12,13 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(20))
     image = db.Column(db.String(20), nullable=False, default='default.png')
     address = db.Column(db.String(100))
+    failed_login_attempts = db.Column(db.Integer, default=0)
+    
+    def increment_failed_login_attempts(self):
+        self.failed_login_attempts += 1
+
+    def reset_failed_login_attempts(self):
+        self.failed_login_attempts = 0
 
 
 class Product(db.Model):

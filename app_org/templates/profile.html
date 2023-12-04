@@ -5,21 +5,19 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/profile.css')}}">
 {%endblock%}
 
-{% for message in get_flashed_messages() %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        {{message}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-{% endfor %}
-
-{%block content%}
 <body>
+            <!-- Field for server messages-->
+            {%for message in get_flashed_messages()%}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {%endfor%}    
+{%block content%}
     <div class="container">
         <div class="page-title">Hi {{user.username}}</div>
+        <form action="/edit_profile" method="post">
         <div class= "right-info">
-            <div class="user-image">
-                <img height="200" width="200" src="{{url_for('static',filename='assets/'+ user.image)}}" alt="{{user.name}}">
-            </div>
         <div class="card-info">
             <h2>Acount Details</h2>
             <div class="textfield">
@@ -34,11 +32,12 @@
             <div class="textfield"> 
                 <label for="psw"><b>Adress: {{user.address}}</b></label>
             </div>
-            <form action="/edit_profile" method="GET">
-            <label for="Wronginfo">Wrong information?
-                <button href="">Edit Profile!</>
+            <label for="NotRegistered">Wrong information?
+                <a href="/edit_profile">Edit Profile!</a>
             </label>
-            </form>
+        </div>
+        <div class="user-image">
+            <img height="200" width="200" src="{{url_for('static',filename='assets/'+ user.image)}}" alt="{{user.name}}">
         </div>
     </div>
 </body>

@@ -8,8 +8,8 @@ db = SQLAlchemy()
 def create_app():
 
     app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
-    app.config['SECRET_KEY'] = 'dev'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
+    app.config['SECRET_KEY'] = 'zzz'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
 
     db.init_app(app)
@@ -27,6 +27,10 @@ def create_app():
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    @app.errorhandler(404)
+    def page_not_found(e):
+        print(e)
+        return render_template('404.html')
 
     
     from .auth import auth as auth_blueprint

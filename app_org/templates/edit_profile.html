@@ -4,10 +4,18 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/edit_profile.css')}}">
 {%endblock%}
 
+{%include 'navbar.html'%}
+
 {%block content%}
 <body>
+        <!-- Field for server messages-->
+        {%for message in get_flashed_messages()%}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+		{%endfor%}
 
-    {%include 'navbar.html'%}
     <div class="container">
     <div class="profile-box">
     <form action="/edit_profile" method="post">
@@ -37,6 +45,10 @@
         <br>
         <div class="more-info">
             <h2>Change Your Password</h2>
+            <div class="textfield"> 
+                <label for="psw"><b>Old Password</b></label>
+                <input id="password" type="password" placeholder="Old Password" name="old_password" required>
+            </div>
             <div class="textfield"> 
                 <label for="psw"><b>New Password</b></label>
                 <input id="password" type="password" placeholder="New Password" name="new_password" required>

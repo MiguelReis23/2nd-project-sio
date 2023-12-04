@@ -49,6 +49,7 @@ def remove_from_favorites(product_id):
             db.session.delete(wishlist_item)
         db.session.commit()
         print("---------")
+        flash("Item removed from favorites")
         print("---------")
 
     return redirect(url_for('favorites.favorite'))

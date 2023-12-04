@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template
-from flask_login import login_user, logout_user, login_required, current_user, login_manager
+from flask_login import login_user, logout_user, login_required, current_user
 from app_org.models import User, Product
 from app_org import db
 from flask import request, redirect, url_for
-import os
 main = Blueprint('main', __name__)
 
 
@@ -26,13 +25,19 @@ def index_post():
 @login_required
 def product(product_id):
     product = Product.query.filter_by(id=product_id).first()
+    if not product:
+        return render_template('404.html')
     return render_template('product.html', product=product)
 
 
 @main.route('/addproduct', methods=['GET'])
 @login_required
 def add_product():
-    return render_template('addproduct.html')
+    user=User.query.filter_by(id=current_user.id).first()
+    if user.isAdmin == False:
+        return redirect(url_for('main.index'))
+    else:
+        return render_template('addproduct.html')
 
 @main.route('/addproduct', methods=['POST'])
 @login_required

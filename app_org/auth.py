@@ -1,9 +1,9 @@
-import time
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from .models import User
+from app_org.models import User
 from app_org import db
-from werkzeug.security import generate_password_hash
+import time
+from werkzeug.security import generate_password_hash, check_password_hash
 
 auth  = Blueprint('auth', __name__)
 
@@ -20,19 +20,27 @@ def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
     
-    result = db.session.execute(
-        "SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "';").fetchall()
-    
     user = User.query.filter_by(username=username).first()
 
     if not user:
-        flash('User does not exist.', 'error')
+        flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
 
-    if not result:
-        flash('Wrong password.')
+    if user.failed_login_attempts >= 5:
+        flash('Your account is blocked, try angain later!', 'error')
+        time.sleep(10)
+        user.reset_failed_login_attempts()
+        db.session.commit()
+        return redirect(url_for('auth.login'))
+
+    if not check_password_hash(user.password, password):
+        flash('Please check your login details and try again.')
+        user.increment_failed_login_attempts()
+        db.session.commit()
         return redirect(url_for('auth.login'))
     
+    user.reset_failed_login_attempts()
+    db.session.commit()
     login_user(user)
     return redirect(url_for('main.index'))
 
@@ -64,7 +72,7 @@ def register_post():
     
     if password:
         if password == confirm_password:
-            new_user = User(username=username, email=email, password=password)
+            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
         else:
             flash('Passwords do not match.')
             return redirect(url_for('auth.register'))
@@ -75,4 +83,3 @@ def register_post():
     db.session.commit()
     
     return redirect(url_for('auth.login'))
-    

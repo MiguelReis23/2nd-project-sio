@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask
+from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask, session
 from flask_login import login_required, current_user    
 from app_org.models import User
 from app_org import db
 import os
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 prof = Blueprint('profile', __name__)
 
@@ -13,7 +13,7 @@ def profile():
     user = User.query.filter_by(id=current_user.id).first()	
     return render_template('profile.html', user=user)
 
-@prof.route('/edit_profile/', methods=['GET'])
+@prof.route('/edit_profile/')
 @login_required
 def edit_page():
     user = User.query.filter_by(id=current_user.id).first()
@@ -37,10 +37,25 @@ def edit_profile():
  
     #password = request.form.get('password')
     user = User.query.filter_by(id=current_user.id).first()
+    old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
     print("AAAAA")
+
     
+    if old_password:
+        if not check_password_hash(user.password, old_password):
+            flash('Please check your password and try again.')
+            return redirect(url_for('profile.edit_profile'))
+
+    if new_password != confirm_new_password:
+        flash('Passwords do not match.')
+        return redirect(url_for('profile.edit_profile'))
+    elif new_password == old_password:
+        flash('Password cannot be the same as the old one.')
+        return redirect(url_for('profile.edit_profile'))
+    elif new_password == confirm_new_password:
+        user.password = generate_password_hash(new_password, method='sha256')
 
     
     if email:
@@ -59,9 +74,4 @@ def edit_profile():
     
     
     db.session.commit()
-
-    print("------------------")
-    flash('User profile updated.')
-    print("------------------")
-
     return redirect(url_for('profile.profile'))
