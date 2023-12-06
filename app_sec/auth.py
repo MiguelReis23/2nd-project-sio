@@ -60,19 +60,24 @@ def register_post():
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
+    confirm_password = request.form.get('confirm_password')
     user = User.query.filter_by(username=username).first()
+    uppercase_regex = re.compile(r'[A-Z]')
+    lowercase_regex = re.compile(r'[a-z]')
+    digit_regex = re.compile(r'[0-9]')
+    special_regex = re.compile(r'[!@#$%^&*()_+{}|:"<>?]')
+    pass_regex = uppercase_regex.search(password) and lowercase_regex.search(password) and digit_regex.search(password) and special_regex.search(password)
     common_passwords = open('PASSWORDS.txt', 'r')
-    for line in common_passwords:
-        common = []
-        if password == line.strip():
-            common.append(password)
-            flash('Invalid password. Password cannot be a common password.')
-            return redirect(url_for('auth.register'))
+
     if user:
         flash('Username already exists.')
         return redirect(url_for('auth.register'))
     
-    if password:
+    if password != confirm_password:      
+        flash('Passwords do not match.')
+        return redirect(url_for('auth.register'))
+    
+    if password == confirm_password:
 
         for line in common_passwords:
             common = []
@@ -84,8 +89,8 @@ def register_post():
         if len(password) < 12:
             flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
-        elif len(password) >= 12 and len(password) <= 128:
-            if password == (password.lower() and password.upper() and password.isdigit() and password.isalpha()):
+        elif len(password) <= 128:
+            if pass_regex:
                 if re.search(r"[^\u0000-\u00ff]", password):
                     
                     return redirect(url_for('auth.register'))
@@ -95,17 +100,12 @@ def register_post():
                 new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
                 flash('Account created successfully!')
                 db.session.add(new_user)
+                db.session.commit()
                 return redirect(url_for('auth.login'))
             else:
                 flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
                 return redirect(url_for('auth.register'))
-        
     
-    # else para passwords comuns 
     
-
-
-    
-    db.session.commit()
     
     return redirect(url_for('auth.login'))

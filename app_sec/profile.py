@@ -41,74 +41,57 @@ def edit_profile():
     old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
-    print("AAAAA")
     
+    uppercase_regex = re.compile(r'[A-Z]')
+    lowercase_regex = re.compile(r'[a-z]')
+    digit_regex = re.compile(r'[0-9]')
+    special_regex = re.compile(r'[!@#$%^&*()_+{}|:"<>?]')
+    pass_regex = uppercase_regex.search(user.password) and lowercase_regex.search(user.password) and digit_regex.search(user.password) and special_regex.search(user.password)
+    common_passwords = open('PASSWORDS.txt', 'r')
 
+        
     if old_password:
         if not check_password_hash(user.password, old_password):
             flash('Please check your password and try again.')
             return redirect(url_for('profile.edit_profile'))
 
-    if new_password != confirm_new_password:
-        
-        if len(user.password) < 12:
-            flash('Password must have at least 12 characters.')
-            return redirect(url_for('profile.edit_profile'))
-        
-        elif len(user.password) >= 12 and len(user.password) <= 128:
-            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
-                
-                if re.search(r"[^\u0000-\u00ff]", user.password):
-                    flash('Emojis are not valid.')
-                    return redirect(url_for('profile.edit_profile'))
-                
-                if re.search(r"\s", user.password):
-                    flash('Password cannot contain spaces.')
-                    return redirect(url_for('profile.edit_profile'))
-                
-                return redirect(url_for('profile.edit_profile'))
-        
+    if new_password != confirm_new_password:      
         flash('Passwords do not match.')
         return redirect(url_for('profile.edit_profile'))
     
     elif new_password == old_password:
-        if len(user.password) < 12:
-            flash('Password must have at least 12 characters.')
-            return redirect(url_for('profile.edit_profile'))
-        
-        elif len(user.password) >= 12 and len(user.password) <= 128:
-            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
-                
-                if re.search(r"[^\u0000-\u00ff]", user.password):
-                    flash('Emojis are not valid.')
-                    return redirect(url_for('profile.edit_profile'))
-                
-                if re.search(r"\s", user.password):
-                    flash('Password cannot contain spaces.')
-                    return redirect(url_for('profile.edit_profile'))
-                
-                return redirect(url_for('profile.edit_profile'))
         flash('Password cannot be the same as the old one.')
         return redirect(url_for('profile.edit_profile'))
     
     elif new_password == confirm_new_password:
+
+        for line in common_passwords:
+            common = []
+            if user.password == line.strip():
+                common.append(user.password)
+                flash('Invalid password. Password cannot be a common password.')
+                return redirect(url_for('profile.edit_profile'))
+
         if len(user.password) < 12:
             flash('Password must have at least 12 characters.')
             return redirect(url_for('profile.edit_profile'))
         
-        elif len(user.password) >= 12 and len(user.password) <= 128:
-            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
-                
+        elif len(user.password) <= 128:
+            if pass_regex:
                 if re.search(r"[^\u0000-\u00ff]", user.password):
-                    flash('Emojis are not valid.')
-                    return redirect(url_for('profile.edit_profile'))
-                
+                    
+                    return redirect(url_for('profile.edit_profile')) 
                 if re.search(r"\s", user.password):
-                    flash('Password cannot contain spaces.')
+                    
                     return redirect(url_for('profile.edit_profile'))
-                
+
+                flash('Password changed successfully!')        
+                user.password = generate_password_hash(new_password, method='sha256')
+                db.session.commit()     
                 return redirect(url_for('profile.edit_profile'))
-        user.password = generate_password_hash(new_password, method='sha256')
+            else:
+                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
+                return redirect(url_for('profile.edit_profile'))
 
     
     if email:
@@ -126,5 +109,4 @@ def edit_profile():
         #     image.save(os.path.join("app/static/pictures",image.filename))
     
     
-    db.session.commit()
     return redirect(url_for('profile.profile'))
