@@ -23,7 +23,7 @@ def login_post():
     if not user:
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
-    if user:
+    else:
         if user.failed_login_attempts >= 2:
             flash('Your account is blocked, try angain later!', 'error')
             user.reset_failed_login_attempts()
