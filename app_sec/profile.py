@@ -55,7 +55,7 @@ def edit_profile():
             flash('Password must have at least 12 characters.')
             return redirect(url_for('profile.edit_profile'))
         
-        elif len(user.password) >= 12:
+        elif len(user.password) >= 12 and len(user.password) <= 128:
             if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
                 
                 if re.search(r"[^\u0000-\u00ff]", user.password):
@@ -76,7 +76,7 @@ def edit_profile():
             flash('Password must have at least 12 characters.')
             return redirect(url_for('profile.edit_profile'))
         
-        elif len(user.password) >= 12:
+        elif len(user.password) >= 12 and len(user.password) <= 128:
             if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
                 
                 if re.search(r"[^\u0000-\u00ff]", user.password):
@@ -96,7 +96,7 @@ def edit_profile():
             flash('Password must have at least 12 characters.')
             return redirect(url_for('profile.edit_profile'))
         
-        elif len(user.password) >= 12:
+        elif len(user.password) >= 12 and len(user.password) <= 128:
             if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
                 
                 if re.search(r"[^\u0000-\u00ff]", user.password):

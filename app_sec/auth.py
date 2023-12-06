@@ -4,6 +4,7 @@ from .models import User
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+import os
 
 auth  = Blueprint('auth', __name__)
 
@@ -60,16 +61,30 @@ def register_post():
     email = request.form.get('email')
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
-    
+    common_passwords = open('PASSWORDS.txt', 'r')
+    for line in common_passwords:
+        common = []
+        if password == line.strip():
+            common.append(password)
+            flash('Invalid password. Password cannot be a common password.')
+            return redirect(url_for('auth.register'))
     if user:
         flash('Username already exists.')
         return redirect(url_for('auth.register'))
     
     if password:
+
+        for line in common_passwords:
+            common = []
+            if password == line.strip():
+                common.append(password)
+                flash('Invalid password. Password cannot be a common password.')
+                return redirect(url_for('auth.register'))
+        
         if len(password) < 12:
             flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
-        else:
+        elif len(password) >= 12 and len(password) <= 128:
             if password == (password.lower() and password.upper() and password.isdigit() and password.isalpha()):
                 if re.search(r"[^\u0000-\u00ff]", password):
                     
