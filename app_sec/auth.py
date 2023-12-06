@@ -2,11 +2,12 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from .models import User
 from . import db
-import time
 from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 auth  = Blueprint('auth', __name__)
 
+MAX_FAILED_ATTEMPTS = 5
 
 @auth.route('/login')
 def login():
@@ -19,25 +20,23 @@ def login():
 def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
-    
     user = User.query.filter_by(username=username).first()
 
     if not user:
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
-
-    if user.failed_login_attempts >= 5:
-        flash('Your account is blocked, try angain later!', 'error')
-        time.sleep(10)
-        user.reset_failed_login_attempts()
-        db.session.commit()
-        return redirect(url_for('auth.login'))
-
-    if not check_password_hash(user.password, password):
-        flash('Please check your login details and try again.')
-        user.increment_failed_login_attempts()
-        db.session.commit()
-        return redirect(url_for('auth.login'))
+    if user:
+        if user.failed_login_attempts >= MAX_FAILED_ATTEMPTS:
+            flash('Your account is blocked, try angain later!', 'error')
+            user.reset_failed_login_attempts()
+            db.session.commit()
+            return redirect(url_for('auth.login'))
+        
+        if not check_password_hash(user.password, password):
+            flash('Please check your login details and try again.')
+            user.increment_failed_login_attempts()
+            db.session.commit()
+            return redirect(url_for('auth.login'))
     
     user.reset_failed_login_attempts()
     db.session.commit()
@@ -62,8 +61,6 @@ def register_post():
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
-    confirm_password = request.form.get('confirm_password')
-    
     user = User.query.filter_by(username=username).first()
     
     if user:
@@ -71,15 +68,31 @@ def register_post():
         return redirect(url_for('auth.register'))
     
     if password:
-        if password == confirm_password:
-            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
-        else:
-            flash('Passwords do not match.')
+        if len(password) < 12:
+            flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
+        else:
+            if password == (password.lower() and password.upper() and password.isdigit() and password.isalpha()):
+                if re.search(r"[^\u0000-\u00ff]", password):
+                    
+                    return redirect(url_for('auth.register'))
+                if re.search(r"\s", password):
+
+                    return redirect(url_for('auth.register'))
+                new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
+                flash('Account created successfully!')
+                db.session.add(new_user)
+                return redirect(url_for('auth.login'))
+            else:
+                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
+                return redirect(url_for('auth.register'))
+        
+    
+    # else para passwords comuns 
     
 
 
-    db.session.add(new_user)
+    
     db.session.commit()
     
     return redirect(url_for('auth.login'))

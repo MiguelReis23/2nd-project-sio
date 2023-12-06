@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask, session
 from flask_login import login_required, current_user    
 from app_sec.models import User
@@ -41,20 +42,72 @@ def edit_profile():
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
     print("AAAAA")
-
     
+
     if old_password:
         if not check_password_hash(user.password, old_password):
             flash('Please check your password and try again.')
             return redirect(url_for('profile.edit_profile'))
 
     if new_password != confirm_new_password:
+        
+        if len(user.password) < 12:
+            flash('Password must have at least 12 characters.')
+            return redirect(url_for('profile.edit_profile'))
+        
+        elif len(user.password) >= 12:
+            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
+                
+                if re.search(r"[^\u0000-\u00ff]", user.password):
+                    flash('Emojis are not valid.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                if re.search(r"\s", user.password):
+                    flash('Password cannot contain spaces.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                return redirect(url_for('profile.edit_profile'))
+        
         flash('Passwords do not match.')
         return redirect(url_for('profile.edit_profile'))
+    
     elif new_password == old_password:
+        if len(user.password) < 12:
+            flash('Password must have at least 12 characters.')
+            return redirect(url_for('profile.edit_profile'))
+        
+        elif len(user.password) >= 12:
+            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
+                
+                if re.search(r"[^\u0000-\u00ff]", user.password):
+                    flash('Emojis are not valid.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                if re.search(r"\s", user.password):
+                    flash('Password cannot contain spaces.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                return redirect(url_for('profile.edit_profile'))
         flash('Password cannot be the same as the old one.')
         return redirect(url_for('profile.edit_profile'))
+    
     elif new_password == confirm_new_password:
+        if len(user.password) < 12:
+            flash('Password must have at least 12 characters.')
+            return redirect(url_for('profile.edit_profile'))
+        
+        elif len(user.password) >= 12:
+            if user.password == (user.password.lower() and user.password.upper() and user.password.isdigit() and user.password.isalpha()):
+                
+                if re.search(r"[^\u0000-\u00ff]", user.password):
+                    flash('Emojis are not valid.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                if re.search(r"\s", user.password):
+                    flash('Password cannot contain spaces.')
+                    return redirect(url_for('profile.edit_profile'))
+                
+                return redirect(url_for('profile.edit_profile'))
         user.password = generate_password_hash(new_password, method='sha256')
 
     

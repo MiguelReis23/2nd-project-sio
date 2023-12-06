@@ -19,7 +19,7 @@ def create_users():
     users = [{
         'username': 'user1',
         'email': 'user1@ua.pt',
-        'password': generate_password_hash('password1', method='sha256'),
+        'password': generate_password_hash('Password123#', method='sha256'),
         'first_name': 'user',
         'last_name': 'one',
         'isAdmin': False,
@@ -30,13 +30,13 @@ def create_users():
     }, {
         'username': 'user2',
         'email': 'user2@ua.pt',
-        'password': generate_password_hash('password2', method='sha256'),
+        'password': generate_password_hash('Password456#', method='sha256'),
         'first_name': 'user',
         'failed_login_attempts': 0,
     },{
         'username': 'lucifer666',
         'email': 'lucifer666@ua.pt',
-        'password': generate_password_hash('hell', method='sha256'),
+        'password': generate_password_hash('Hell!23456789', method='sha256'),
         'first_name': 'Lucifer',
         'isAdmin': True,
         'failed_login_attempts': 0,

@@ -3,7 +3,7 @@
 {%block styles%}
 <link rel="stylesheet" href="{{ url_for('static',filename='css/addproduct.css') }}">
 {%endblock%}
-
+{%block content%}
 <body>
         <!-- Field for server messages-->
         {%for message in get_flashed_messages()%}
@@ -23,8 +23,8 @@
                 <input type="text" id="name" name="name" required>
             </div>
             <div class="form-group">
-                <label for="email">Category:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="text">Category:</label>
+                <input type="text" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="address">Description:</label>
@@ -38,5 +38,5 @@
         </form>
     </div>
 </div>
-{%endblock%}
 </body>
+{%endblock%}

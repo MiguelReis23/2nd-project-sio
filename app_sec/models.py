@@ -16,10 +16,10 @@ class User(db.Model, UserMixin):
     
     def increment_failed_login_attempts(self):
         self.failed_login_attempts += 1
-
+    
     def reset_failed_login_attempts(self):
         self.failed_login_attempts = 0
-
+    
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
