@@ -7,8 +7,6 @@ import re
 
 auth  = Blueprint('auth', __name__)
 
-MAX_FAILED_ATTEMPTS = 5
-
 @auth.route('/login')
 def login():
     if current_user.is_authenticated:
@@ -26,7 +24,7 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     if user:
-        if user.failed_login_attempts >= MAX_FAILED_ATTEMPTS:
+        if user.failed_login_attempts >= 2:
             flash('Your account is blocked, try angain later!', 'error')
             user.reset_failed_login_attempts()
             db.session.commit()
