@@ -1,12 +1,13 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
+from flask import redirect, url_for
 from .models import User
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
-import os
+from .models import User
 
-auth  = Blueprint('auth', __name__)
+auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
 def login():
@@ -25,21 +26,23 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
-        if user.failed_login_attempts >= 2:
-            flash('Your account is blocked, try angain later!', 'error')
-            user.reset_failed_login_attempts()
-            db.session.commit()
-            return redirect(url_for('auth.login'))
+        # if user.failed_login_attempts >= 2:
+        #     flash('Your account is blocked, try angain later!', 'error')
+            
+        #     user.reset_failed_login_attempts()
+        #     db.session.commit()
+        #     return redirect(url_for('auth.login'))
         
         if not check_password_hash(user.password, password):
+            flash(f'Failed login attempt for username: {username}')
             flash('Please check your login details and try again.')
             user.increment_failed_login_attempts()
             db.session.commit()
             return redirect(url_for('auth.login'))
-    
+
     user.reset_failed_login_attempts()
     db.session.commit()
-    login_user(user)
+    login_user(user, remember=True)
     return redirect(url_for('main.index'))
 
 @auth.route('/logout', methods=['GET'])
@@ -105,7 +108,6 @@ def register_post():
             else:
                 flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
                 return redirect(url_for('auth.register'))
-    
     
     
     return redirect(url_for('auth.login'))

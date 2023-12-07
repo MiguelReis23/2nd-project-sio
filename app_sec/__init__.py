@@ -1,7 +1,8 @@
+from datetime import timedelta
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
+from flask_session import Session
 
 db = SQLAlchemy()
 
@@ -10,13 +11,15 @@ def create_app():
     app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
     app.config['SECRET_KEY'] = 'zzz'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
-
+    app.config['SESSION_TYPE'] = '.' 
+    app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=10)
 
     db.init_app(app)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+    Session()
 
     from .models import User
     with app.app_context():
