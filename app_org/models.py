@@ -6,7 +6,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    first_name = db.Column(db.String(100))
+    first_name = db.Column(db.String(100), default= "")
     last_name = db.Column(db.String(100))
     isAdmin = db.Column(db.Boolean, default=False)
     phone_number = db.Column(db.String(20))
@@ -20,6 +20,9 @@ class User(db.Model, UserMixin):
     def reset_failed_login_attempts(self):
         self.failed_login_attempts = 0
 
+    def default_username(self):
+        self.first_name = self.username
+        
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)

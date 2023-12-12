@@ -28,7 +28,6 @@ def login_post():
 
     if user.failed_login_attempts >= 5:
         flash('Your account is blocked, try angain later!', 'error')
-        time.sleep(10)
         user.reset_failed_login_attempts()
         db.session.commit()
         return redirect(url_for('auth.login'))
