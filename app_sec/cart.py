@@ -94,6 +94,9 @@ def checkout():
     return render_template('checkout.html', user=user,total=total)
 
 
+
+
+
 @crt.route('/cart/checkout/confirm', methods=['POST'])
 @login_required
 def confirm_checkout():
