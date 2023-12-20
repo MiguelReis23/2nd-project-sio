@@ -28,9 +28,8 @@ def login_post():
         return redirect(url_for('auth.login'))
     else:
         if user.failed_login_attempts > 2:
-            flash('Account deleted,contact us: 217 917 000', 'error')
-            #delete user
-            db.session.delete(user)
+            flash('ola', 'error')
+            
             db.session.commit()
             return redirect(url_for('auth.login'))  
                 
