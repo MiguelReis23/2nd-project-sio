@@ -35,7 +35,7 @@ def product(product_id):
 def add_product():
     user=User.query.filter_by(id=current_user.id).first()
     if user.isAdmin == False:
-        return redirect(url_for('main.index'))
+        return render_template('404.html')
     else:
         return render_template('addproduct.html')
 

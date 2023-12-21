@@ -12,7 +12,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'zzz'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
     app.config['SESSION_TYPE'] = '.' 
-    app.config['REMEMBER_COOKIE_DURATION'] = timedelta(minutes=10)
+    app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=10)
 
     db.init_app(app)
 
