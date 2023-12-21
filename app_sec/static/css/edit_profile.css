@@ -61,6 +61,20 @@ body *{
     cursor: pointer;
 }
 
+.btn-delete{
+    width: 30%;
+    padding: 16px 0px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #ffffff;
+    background: #f55a00;
+    cursor: pointer;
+}
+
 
 @media only screen and(max-width: 950px) {
     .card-login{

@@ -90,24 +90,18 @@ def register_post():
                 return redirect(url_for('auth.register'))
         
         if len(password) < 12:
-            flash('Password must have at least 12 characters.')
+            #flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
         elif len(password) <= 128:
             if pass_regex:
-                if re.search(r"[^\u0000-\u00ff]", password):
-                    
-                    return redirect(url_for('auth.register'))
-                if re.search(r"\s", password):
-
-                    return redirect(url_for('auth.register'))
                 new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
                 flash('Account created successfully!')
                 db.session.add(new_user)
                 db.session.commit()
                 return redirect(url_for('auth.login'))
-            else:
-                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
-                return redirect(url_for('auth.register'))
+        else:
+            flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
+            return redirect(url_for('auth.register'))
     
     
     return redirect(url_for('auth.login'))

@@ -52,9 +52,6 @@ def edit_profile():
     pass_regex = uppercase_regex.search(user.password) and lowercase_regex.search(user.password) and digit_regex.search(user.password) and special_regex.search(user.password)
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
 
-    
-        
-
     if old_password:
         if not check_password_hash(user.password, old_password):
             flash('Please check your password and try again.')
@@ -95,16 +92,11 @@ def edit_profile():
                     return redirect(url_for('profile.edit_profile'))
 
             if len(user.password) < 12:
-                flash('Password must have at least 12 characters.')
+                #flash('Password must have at least 12 characters.')
                 return redirect(url_for('profile.edit_profile'))
-            
             elif len(user.password) <= 128:
                 if pass_regex:
-                    if re.search(r"[^\u0000-\u00ff]", user.password):
-                        return redirect(url_for('profile.edit_profile')) 
-                    if re.search(r"\s", user.password):
-                        return redirect(url_for('profile.edit_profile'))
-
+                    
                     if email:
                         user.email = email
                     if first_name:
@@ -120,9 +112,9 @@ def edit_profile():
                     user.password = generate_password_hash(new_password, method='sha256')
                     db.session.commit()     
                     return redirect(url_for('profile.edit_profile'))
-                else:
-                    flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, no Emojis and no Spaces.')
-                    return redirect(url_for('profile.edit_profile'))
+            else:
+                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
+                return redirect(url_for('profile.edit_profile'))
 
     
         # if image:
