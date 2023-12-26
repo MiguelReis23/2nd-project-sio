@@ -7,42 +7,87 @@
 <!-- Load Navbar -->
 {% include 'navbar.html' %}
 
-
 {% block content %}
 <body>
-        <!-- Field for server messages-->
-        {%for message in get_flashed_messages()%}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{message}}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-		{%endfor%}
-<!-- Pagina Registo -->
-<form action="/register" method="post">
-    <div class="main">
-        <div class="main-login"></div>
-        <div class="log">
-            <h2>Cria já a tua conta</h2>
-        <div class="textfield">
-            <label for="uname"><b>Username</b></label>
-            <input id= "username" type="text" placeholder="Enter Username" name="username" required>
-        </div>
-        <div class="textfield">
-            <label for="mail"><b>E-mail</b></label>
-            <input id="email" type="email" placeholder="Enter E-mail" name="email" required>
-        </div>
-        <div class="textfield">
-            <label for="psw"><b> Password</b></label>
-            <input id="password" type="password" placeholder="Enter Password" name="password" required>
-        </div>
-        <div class="textfield">
-            <label for="psw"><b>Confirm Password</b></label>
-            <input id="cpassword" type="password" placeholder="Confirm Password" name="confirm_password" required>
-        </div>
-
-        <button class="btn-login">Registar</button>
-        <label for="NotRegistered">Already Registered?</label>
-        <a href="/login">Login</a>
+    <!-- Field for server messages-->
+    {%for message in get_flashed_messages()%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-</form>
+    {%endfor%}
+
+    <!-- Pagina Registo -->
+    <form action="/register" method="post">
+        <div class="main">
+            <div class="main-login"></div>
+            <div class="log">
+                <h2>Cria já a tua conta</h2>
+
+                <div class="textfield">
+                    <label for="uname"><b>Username</b></label>
+                    <input id="username" type="text" placeholder="Enter Username" name="username" required>
+                </div>
+
+                <div class="textfield">
+                    <label for="mail"><b>E-mail</b></label>
+                    <input id="email" type="email" placeholder="Enter E-mail" name="email" required>
+                </div>
+
+                <div class="textfield">
+                    <label for="psw"><b>Password</b></label>
+                    <input id="password" type="password" placeholder="Enter Password" name="password" required oninput="checkPasswordStrength(this.value)">
+                    <div id="password-strength"></div>
+                </div>
+
+                <div class="textfield">
+                    <label for="psw"><b>Confirm Password</b></label>
+                    <input id="cpassword" type="password" placeholder="Confirm Password" name="confirm_password" required>
+                </div>
+
+                <button class="btn-login">Registar</button>
+                <label for="NotRegistered">Already Registered?</label>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function checkPasswordStrength(password) {
+        
+        var hasUpperCase = /[A-Z]/.test(password);
+        var hasLowerCase = /[a-z]/.test(password);
+        var hasDigit = /\d/.test(password);
+        var hasSpecialChar = /[!@#$%^&*()_+{}|:"<>?]/.test(password);
+
+        var strength = 0;
+        
+        if (password.length >= 12 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar) {
+            strength = 2; // Strong
+        } else if (password.length >= 8 && hasUpperCase && hasLowerCase) {
+            strength = 1; // Moderate
+        } else {
+            strength = 0; // Weak
+        }
+
+        displayStrength(strength);
+    }
+
+        function displayStrength(strength) {
+            var strengthMeter = document.getElementById("password-strength");
+            var strengthText;
+
+            if (strength === 0) {
+                strengthText = "Weak";
+            } else if (strength === 1) {
+                strengthText = "Moderate";
+            } else if (strength === 2){
+                strengthText = "Strong";
+            }
+
+            strengthMeter.textContent = "Password Strength: " + strengthText;
+        }
+    </script>
+</body>
+
 {% endblock %}

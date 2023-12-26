@@ -70,7 +70,7 @@ def register_post():
     digit_regex = re.compile(r'[0-9]')
     special_regex = re.compile(r'[!@#$%^&*()_+{}|:"<>?]')
     pass_regex = uppercase_regex.search(password) and lowercase_regex.search(password) and digit_regex.search(password) and special_regex.search(password)
-    common_passwords = open('PASSWORDS.txt', 'r')
+    common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
 
     if user:
         flash('Username already exists.')

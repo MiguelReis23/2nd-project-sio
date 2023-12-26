@@ -52,11 +52,12 @@
             <h2>Change Your Password</h2>
             <div class="textfield"> 
                 <label for="psw"><b>New Password</b></label>
-                <input id="password" type="password" placeholder="New Password" name="new_password">
+                <input id="password" type="password" placeholder="New Password" name="new_password" oninput="checkPasswordStrength(this.value)">
+                <div id="password-strength"></div>
             </div>
             <div class="textfield"> 
                 <label for="psw"><b>Confirm New Password</b></label>
-                <input id="password" type="password" placeholder="Confirm New Password" name="confirm_new_password">
+                <input id="cpassword" type="cpassword" placeholder="Confirm New Password" name="confirm_new_password">
             </div>
             <button class="btn-save">Save Changes</button>
         <br>
@@ -65,5 +66,43 @@
         </div>
     </div>
     </form>
+
+    <script>
+        function checkPasswordStrength(password) {
+        
+        var hasUpperCase = /[A-Z]/.test(password);
+        var hasLowerCase = /[a-z]/.test(password);
+        var hasDigit = /\d/.test(password);
+        var hasSpecialChar = /[!@#$%^&*()_+{}|:"<>?]/.test(password);
+
+        var strength = 0;
+        
+        if (password.length >= 12 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar) {
+            strength = 2; // Strong
+        } else if (password.length >= 8 && hasUpperCase && hasLowerCase) {
+            strength = 1; // Moderate
+        } else {
+            strength = 0; // Weak
+        }
+
+        displayStrength(strength);
+    }
+
+        function displayStrength(strength) {
+            var strengthMeter = document.getElementById("password-strength");
+            var strengthText;
+
+            if (strength === 0) {
+                strengthText = "Weak";
+            } else if (strength === 1) {
+                strengthText = "Moderate";
+            } else if (strength === 2){
+                strengthText = "Strong";
+            }
+
+            strengthMeter.textContent = "Password Strength: " + strengthText;
+        }
+    </script>
+
 </body>
 {% endblock %}
