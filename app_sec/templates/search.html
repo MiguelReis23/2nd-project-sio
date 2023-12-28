@@ -63,7 +63,11 @@
   // Function to generate HTML cards from product data
   function displayProductCards(products) {
     let html = "";
-    $("#search_result").text("Search results for: " + $("#search").val());
+    var userInput = $("#search").val();
+    var sanitizedUserInput = $("<div>").text(userInput).html();
+    $("#search_result").html(
+      "Search results for: <strong>" + sanitizedUserInput + "</strong>"
+    );
     html += '<div class="row">';
     html += '<div class="col-12">';
     html += "</div>";

@@ -23,7 +23,6 @@ def search_products():
     products = Product.query.filter(Product.name.contains(query)).all()
     for product in products:
         results["results"].append({"name": product.name, "price": product.price, "id": product.id, "image": product.image, "description": product.description})
-    print(results)
     return jsonify(results)
 
 @src.route('/search/products/<int:product_id>', methods=['GET'])
