@@ -151,3 +151,11 @@ def edit_profile():
     
     
     return redirect(url_for('profile.profile'))
+
+@prof.route('/delete_profile',methods=['POST'])
+@login_required
+def delete_profile():
+    user = User.query.filter_by(id=current_user.id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('auth.logout'))
