@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint,jsonify
 from app_sec import db
 from app_sec.models import User
@@ -27,12 +28,14 @@ def create_users():
         'image': 'default.png',
         'address': 'Aveiro',
         'failed_login_attempts': 0,
+        'last_login_attempt': datetime.utcnow(),
     }, {
         'username': 'user2',
         'email': 'user2@ua.pt',
         'password': generate_password_hash('Password456#', method='sha256'),
         'first_name': 'user',
         'failed_login_attempts': 0,
+        'last_login_attempt': datetime.utcnow(),
     },{
         'username': 'lucifer666',
         'email': 'lucifer666@ua.pt',
@@ -40,6 +43,8 @@ def create_users():
         'first_name': 'Lucifer',
         'isAdmin': True,
         'failed_login_attempts': 0,
+        'last_login_attempt': datetime.utcnow(),
+        
     }]
     try:
         db.session.bulk_insert_mappings(User, users)
@@ -126,8 +131,7 @@ def create_categories():
         return jsonify({'message': 'Categories created successfully!'})
     except Exception as e:
         print(e)
-        return jsonify({'message': 'Error creating categories!'})
-    
+        return jsonify({'message': 'Error creating categories!'})  
 
 @database.route('/generate/all', methods=['GET'])
 def create_all():

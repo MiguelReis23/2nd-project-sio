@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block styles %}
-<link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
-{% endblock %}
-
+<head>
+    {% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+    {% endblock %}
+</head>
 <!-- Load Navbar -->
 {% include 'navbar.html' %}
 

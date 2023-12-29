@@ -4,8 +4,9 @@ from flask import redirect, url_for
 from .models import User
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-import re
 from .models import User
+from datetime import datetime, timedelta
+from flask import Flask, abort
 
 auth = Blueprint('auth', __name__)
 
@@ -27,20 +28,35 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
-        if user.failed_login_attempts > 2:
-            flash('ola', 'error')
-            
-            db.session.commit()
-            return redirect(url_for('auth.login'))  
-                
-        if not check_password_hash(user.password, password):
+        
+
+        if user.failed_login_attempts >= 2:
+            if user.last_login_attempt and user.last_login_attempt > datetime.now():
+                flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
+                if check_password_hash(user.password, password):
+                    flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
+                    user.reset_failed_login_attempts()
+                    db.session.commit()
+                    return redirect(url_for('auth.login'))
+                return redirect(url_for('auth.login'))
+            elif user.last_login_attempt and user.last_login_attempt <= datetime.now():
+                flash('Your account is now unlocked.')
+                user.reset_failed_login_attempts()
+                db.session.commit()
+                return redirect(url_for('main.index'))    
+
+
+        elif not check_password_hash(user.password, password):
             flash('Please check your login details and try again.')
             user.increment_failed_login_attempts()
+            if user.failed_login_attempts >= 2:
+                user.last_login_attempt = datetime.now() + timedelta(seconds=30)
+                
             db.session.commit()
             return redirect(url_for('auth.login'))
-           
         
     user.reset_failed_login_attempts()
+    user.last_login_attempt = datetime.now()
     db.session.commit()
     login_user(user, remember=True)
     return redirect(url_for('main.index'))

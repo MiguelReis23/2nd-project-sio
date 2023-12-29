@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_login import UserMixin
 from app_sec import db
 
@@ -13,12 +14,16 @@ class User(db.Model, UserMixin):
     image = db.Column(db.String(20), nullable=False, default='default.png')
     address = db.Column(db.String(100))
     failed_login_attempts = db.Column(db.Integer, default=0)
+    last_login_attempt = db.Column(db.DateTime)
 
+    
     def increment_failed_login_attempts(self):
         self.failed_login_attempts += 1
+        self.last_login_attempt = datetime.now()
 
     def reset_failed_login_attempts(self):
-        self.failed_login_attempts = 0       
+        self.failed_login_attempts = 0    
+           
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
