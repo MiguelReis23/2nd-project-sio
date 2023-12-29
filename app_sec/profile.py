@@ -47,11 +47,6 @@ def edit_profile():
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
     
-    uppercase_regex = re.compile(r'[A-Z]')
-    lowercase_regex = re.compile(r'[a-z]')
-    digit_regex = re.compile(r'[0-9]')
-    special_regex = re.compile(r'[!@#$%^&*()_+{}|:"<>?]')
-    pass_regex = uppercase_regex.search(user.password) and lowercase_regex.search(user.password) and digit_regex.search(user.password) and special_regex.search(user.password)
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
 
     if old_password:
@@ -113,28 +108,27 @@ def edit_profile():
                     return redirect(url_for('profile.edit_profile'))
 
             if len(user.password) < 12:
-                #flash('Password must have at least 12 characters.')
+                flash('Password must have at least 12 characters.')
                 return redirect(url_for('profile.edit_profile'))
-            elif len(user.password) <= 128:
-                if pass_regex:
-                    
-                    if email:
-                        user.email = email
-                    if first_name:
-                        user.first_name = first_name
-                    if last_name:
-                        user.last_name = last_name
-                    if phone_number:
-                        user.phone_number = phone_number
-                    if address:
-                        user.address = address
-
-                    flash('Password changed successfully!')        
-                    user.password = generate_password_hash(new_password, method='sha256')
-                    db.session.commit()     
-                    return redirect(url_for('profile.edit_profile'))
+            elif len(user.password) > 128:
+                flash('Password must have less than 128 characters.')
+                return redirect(url_for('profile.edit_profile'))
             else:
-                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
+                    
+                if email:
+                    user.email = email
+                if first_name:
+                    user.first_name = first_name
+                if last_name:
+                    user.last_name = last_name
+                if phone_number:
+                    user.phone_number = phone_number
+                if address:
+                    user.address = address
+
+                flash('Password changed successfully!')        
+                user.password = generate_password_hash(new_password, method='sha256')
+                db.session.commit()     
                 return redirect(url_for('profile.edit_profile'))
 
     

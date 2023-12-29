@@ -65,11 +65,6 @@ def register_post():
     password = request.form.get('password')
     confirm_password = request.form.get('confirm_password')
     user = User.query.filter_by(username=username).first()
-    uppercase_regex = re.compile(r'[A-Z]')
-    lowercase_regex = re.compile(r'[a-z]')
-    digit_regex = re.compile(r'[0-9]')
-    special_regex = re.compile(r'[!@#$%^&*()_+{}|:"<>?]')
-    pass_regex = uppercase_regex.search(password) and lowercase_regex.search(password) and digit_regex.search(password) and special_regex.search(password)
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
 
     if user:
@@ -92,16 +87,13 @@ def register_post():
         if len(password) < 12:
             flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
-        elif len(password) <= 128:
-            if pass_regex:
-                new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
-                flash('Account created successfully!')
-                db.session.add(new_user)
-                db.session.commit()
-                return redirect(url_for('auth.login'))
-            else:
-                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
-                return redirect(url_for('auth.register'))
-    
-
-    return redirect(url_for('auth.register'))
+        elif len(password) > 128:
+            
+            flash('Password must have at most 128 characters.')
+            return redirect(url_for('auth.register'))
+        else:
+            flash('Account successfuly created.')
+            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('auth.login'))
