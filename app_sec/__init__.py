@@ -3,21 +3,22 @@ from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+import os
 
 db = SQLAlchemy()
 mail= Mail()
 def create_app():
 
     app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
-    app.config['SECRET_KEY'] = 'zzz'
+    app.config['SECRET_KEY'] = os.urandom(24)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite'
-    app.config['SESSION_TYPE'] = '.' 
-    app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=10)
-
-
-
-
-
+    app.config['SESSION_TYPE'] = 'filesystem' 
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['SESSION_COOKIE_NAME'] = 'session'
+    app.config['SESSION_COOKIE_PATH'] = '/'
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
     app.config['MAIL_SERVER']='smtp.gmail.com'
     app.config['MAIL_PORT'] = 465

@@ -68,7 +68,6 @@ def edit_profile():
                 user.address = address
 
             flash('Profile updated successfully!')
-            print(current_email)
 
             msg = Message("Profile updated")
             msg.recipients= [current_email]
@@ -85,8 +84,6 @@ def edit_profile():
             """.format(username=user.username)
 
             mail.send(msg)
-            
-            
             db.session.commit()
             return redirect(url_for('profile.profile'))
         
@@ -126,8 +123,24 @@ def edit_profile():
                 if address:
                     user.address = address
 
-                flash('Password changed successfully!')        
+                flash('Password changed successfully!')
                 user.password = generate_password_hash(new_password, method='sha256')
+
+                msg = Message("Password updated")
+                msg.recipients= [current_email]
+                msg.body = """Dear {username},
+
+                We hope this message finds you well. We wanted to inform you that your password on Deti@Merch has been successfully updated. Your information is now current, ensuring a seamless and personalized experience on our site.
+
+                If you did not make these changes or have any concerns about your account security, please reach out to us at "detimerch@gmail.com". We take the security of your account seriously and will investigate any unauthorized changes promptly.
+
+                Thank you for choosing Deti@Merch. We appreciate your trust in us, and we're committed to providing you with the best shopping experience.
+
+                Best regards,
+                Deti@Merch Security Team
+                """.format(username=user.username)
+
+                mail.send(msg)
                 db.session.commit()     
                 return redirect(url_for('profile.edit_profile'))
 
