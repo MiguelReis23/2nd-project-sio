@@ -2,7 +2,8 @@ import re
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask, session
 from flask_login import login_required, current_user    
 from app_sec.models import User
-from app_sec import db
+from app_sec import db, mail
+from flask_mail import Message
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -41,6 +42,7 @@ def edit_profile():
 
   
     user = User.query.filter_by(id=current_user.id).first()
+    current_email = user.email
     old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
@@ -71,6 +73,25 @@ def edit_profile():
                 user.address = address
 
             flash('Profile updated successfully!')
+            print(current_email)
+
+            msg = Message("Profile updated")
+            msg.recipients= [current_email]
+            msg.body = """Dear {username},
+
+            We hope this message finds you well. We wanted to inform you that your profile on Deti@Merch has been successfully updated. Your information is now current, ensuring a seamless and personalized experience on our site.
+
+            If you did not make these changes or have any concerns about your account security, please reach out to us at "detimerch@gmail.com". We take the security of your account seriously and will investigate any unauthorized changes promptly.
+
+            Thank you for choosing Deti@Merch. We appreciate your trust in us, and we're committed to providing you with the best shopping experience.
+
+            Best regards,
+            Deti@Merch Security Team
+            """.format(username=user.username)
+
+            mail.send(msg)
+            
+            
             db.session.commit()
             return redirect(url_for('profile.profile'))
         

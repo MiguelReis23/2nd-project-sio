@@ -88,9 +88,9 @@ def register_post():
                 common.append(password)
                 flash('Invalid password. Password cannot be a common password.')
                 return redirect(url_for('auth.register'))
-        
+            
         if len(password) < 12:
-            #flash('Password must have at least 12 characters.')
+            flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
         elif len(password) <= 128:
             if pass_regex:
@@ -99,9 +99,9 @@ def register_post():
                 db.session.add(new_user)
                 db.session.commit()
                 return redirect(url_for('auth.login'))
-        else:
-            flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
-            return redirect(url_for('auth.register'))
+            else:
+                flash('Invalid password. Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character and must have between 12 and 128 characters.')
+                return redirect(url_for('auth.register'))
     
-    
-    return redirect(url_for('auth.login'))
+
+    return redirect(url_for('auth.register'))

@@ -2,10 +2,10 @@ from datetime import timedelta
 from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-
+from flask_mail import Mail
 
 db = SQLAlchemy()
-
+mail= Mail()
 def create_app():
 
     app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
@@ -14,7 +14,22 @@ def create_app():
     app.config['SESSION_TYPE'] = '.' 
     app.config['REMEMBER_COOKIE_DURATION'] = timedelta(seconds=10)
 
+
+
+
+
+
+    app.config['MAIL_SERVER']='smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = 'detimerch@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'algl kwdy cnjf lssf'
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_DEFAULT_SENDER'] = 'detimerch@gmail.com'
+    
+
     db.init_app(app)
+    mail.init_app(app)
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
