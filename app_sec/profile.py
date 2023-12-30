@@ -158,4 +158,4 @@ def delete_profile():
     user = User.query.filter_by(id=current_user.id).first()
     db.session.delete(user)
     db.session.commit()
-    return redirect(url_for('auth.logout'))
+    return redirect(url_for('auth.logout')) 

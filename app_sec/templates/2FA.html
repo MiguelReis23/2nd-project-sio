@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+<!-- Load Navbar -->
+{% include 'navbar.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/favorite.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+
+{%block content%}
+
+<body>
+    <h1>Registration Successful</h1>
+    <p>Scan the QR code below with your authenticator app:</p>
+    
+    <!-- Display the QR code image -->
+    <img src="{{ url_for('static', filename='assets/qr.png') }}" alt="QR Code">
+
+    <p>Keep this information secure. It will be used to generate TOTP codes for authentication.</p>
+</body>
+
+
+{%endblock%}

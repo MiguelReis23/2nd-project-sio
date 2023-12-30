@@ -1,15 +1,17 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_login import login_user, logout_user, login_required, current_user
 from flask import redirect, url_for
-from .models import User
-from . import db
+from app_sec.models import User
+from app_sec import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from .models import User
 from datetime import datetime, timedelta
-from flask import Flask, abort
+import pyotp
+import os
+import qrcode
+from flask import Flask,abort
+
 
 auth = Blueprint('auth', __name__)
-
 
 @auth.route('/login')
 def login():
@@ -112,4 +114,8 @@ def register_post():
             new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for('auth.login'))
+            key = pyotp.random_base32()
+            uri = pyotp.totp.TOTP(key).provisioning_uri(name = username, issuer_name="Deti_Merch")
+            # filename=qrcode.make(uri).save('static/assets/qr_code.png')
+            return render_template('2FA.html')
+        
