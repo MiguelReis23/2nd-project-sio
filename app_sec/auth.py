@@ -3,12 +3,13 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash,
 from flask_login import login_user, logout_user, login_required, current_user
 from flask import redirect, url_for
 from app_sec.models import User
-from app_sec import db
+from app_sec import db, mail
+from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-# import pyotp
+import pyotp
 import os
-# import qrcode
+import qrcode
 from flask import Flask,abort
 
 
@@ -26,13 +27,15 @@ def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
+    facode = request.form.get('2facode')
+    totp= pyotp.TOTP(user.key)
 
     if not user:
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
-        
-        if check_password_hash(user.password, password):
+        # if check_password_hash(user.password, password):
+        if check_password_hash(user.password, password) and totp.verify(facode):
             if user.failed_login_attempts >= 2:
                 if user.last_login_attempt and user.last_login_attempt > datetime.now():
                     flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
@@ -49,13 +52,13 @@ def login_post():
                 login_user(user, remember=True)
                 return redirect(url_for('main.index'))
             
-        elif not check_password_hash(user.password, password):
+        # elif not check_password_hash(user.password, password):
+        elif not check_password_hash(user.password, password) and not totp.verify(facode):
             flash('Please check your login details and try again.')
             user.increment_failed_login_attempts()
             if user.failed_login_attempts >= 2:
                 user.last_login_attempt = datetime.now() + timedelta(seconds=30)
                 flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
-                
             db.session.commit()
             return redirect(url_for('auth.login'))
         
@@ -115,9 +118,28 @@ def register_post():
             flash('Account successfuly created.')
             new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
+            key= pyotp.random_base32()
+            new_user.key=key
+            totp= pyotp.TOTP(key).provisioning_uri(username, issuer_name="Detimerch")
+            dir_path = os.path.dirname(os.path.abspath(__file__))
+            qrcode.make(totp).save(os.path.join(dir_path, "static/assets/QR.png"))
             db.session.commit()
-            # key = pyotp.random_base32()
-            # uri = pyotp.totp.TOTP(key).provisioning_uri(name = username, issuer_name="Deti_Merch")
-            # filename=qrcode.make(uri).save('static/assets/qr_code.png')
-            return render_template('2FA.html')
-        
+
+            msg = Message("Account created")
+            msg.recipients= [email]
+            msg.body = """Dear {username},
+            Dear {username},
+            We are pleased to inform you that your account has been created successfully in Deti@merch.
+
+            If you did not create an account in Deti@merch, please ignore this email.
+
+            Thank you for using Deti@merch. We hope you enjoy your experience with us.
+
+            Best regards,
+            Deti@Merch Security Team
+            """.format(username=username)
+
+            mail.send(msg)
+
+
+            return render_template('QRcode.html', key=key)

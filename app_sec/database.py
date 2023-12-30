@@ -5,6 +5,7 @@ from app_sec.models import User
 from app_sec.models import Product
 from app_sec.models import Category
 from werkzeug.security import generate_password_hash
+import pyotp
 
 database = Blueprint('database', __name__)
 
@@ -29,6 +30,7 @@ def create_users():
         'address': 'Aveiro',
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
+        'key': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
     }, {
         'username': 'user2',
         'email': 'user2@ua.pt',
@@ -36,6 +38,7 @@ def create_users():
         'first_name': 'user',
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
+        'key': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
     },{
         'username': 'lucifer666',
         'email': 'lucifer666@ua.pt',
@@ -44,6 +47,7 @@ def create_users():
         'isAdmin': True,
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
+        'key':'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
         
     }]
     try:

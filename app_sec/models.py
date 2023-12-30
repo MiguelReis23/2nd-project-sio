@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     address = db.Column(db.String(100))
     failed_login_attempts = db.Column(db.Integer, default=0)
     last_login_attempt = db.Column(db.DateTime, default= datetime.now())
+    key = db.Column(db.String(32), nullable=False)
 
     
     def increment_failed_login_attempts(self):

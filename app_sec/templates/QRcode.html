@@ -4,7 +4,7 @@
 {% include 'navbar.html' %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/favorite.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/QRcode.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 {% endblock %}
 
@@ -15,9 +15,15 @@
     <p>Scan the QR code below with your authenticator app:</p>
     
     <!-- Display the QR code image -->
-    <img src="{{ url_for('static', filename='assets/qr.png') }}" alt="QR Code">
+    <img src="{{ url_for('static', filename='assets/QR.png') }}" alt="QR Code">
 
-    <p>Keep this information secure. It will be used to generate TOTP codes for authentication.</p>
+    <p>Or enter the following code into your authenticator app:</p>
+    <p>2FA Code: {{ key }}</p>
+
+
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Continue to Login</a>
+
+
 </body>
 
 

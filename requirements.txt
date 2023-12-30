@@ -10,4 +10,6 @@ Flask-SQLAlchemy==3.0.2
 SQLAlchemy==1.4.43
 itsdangerous==2.1.2
 Flask_Mail==0.9.1
+pyotp == 2.9.0
+qrcode == 7.4.2
 
