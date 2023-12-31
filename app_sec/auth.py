@@ -34,7 +34,8 @@ def login_post():
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
-        # if check_password_hash(user.password, password):
+
+
         if check_password_hash(user.password, password) and totp.verify(facode):
             if user.failed_login_attempts >= 2:
                 if user.last_login_attempt and user.last_login_attempt > datetime.now():
@@ -52,7 +53,6 @@ def login_post():
                 login_user(user, remember=True)
                 return redirect(url_for('main.index'))
             
-        # elif not check_password_hash(user.password, password):
         elif not check_password_hash(user.password, password) and not totp.verify(facode):
             flash('Please check your login details and try again.')
             user.increment_failed_login_attempts()
