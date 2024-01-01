@@ -48,34 +48,11 @@ Entre as vunerabilidades que o nosso site apresenta estas são as dez que consid
 
 ## ASVS - 2.1.2
 
-
+A ASVS - 2.2.1 consiste em criar uma verificação para o número de caracteres possiveis de serem aceites em uma password de um utilizador. De modo a uniformizar e a garantir a segurança dos utilizadores as passwords permitidas têm de ter entre 12 a 128 caracteres.
+Falta dizer porque é que escolhemos isto!!!
 
 ### Demonstração
 
-
-
-## Correção
-
-
-## ASVS - 2.1.7
-
-
-## Demonstração
-
-
-## Correção
-
-
-## Demonstração
-
-
-## Correção
-
-## ASVS - 2.2.1
-
-A ASVS - 2.2.1 consiste em criar uma verificação para o número de caracteres possiveis de serem aceites em uma password de um utilizador. De modo a uniformizar e a garantir a segurança dos utilizadores as passwords permitidas têm de ter entre 12 a 128 caracteres.
-Falta dizer porque é que escolhemos isto!!!
-## Demonstração
 De modo a regular o número máximo de caracteres usados em passwords de utilizadores foi implementado uma verificação no ato de registo dos utilizadores.
 
 ```python
@@ -87,6 +64,51 @@ if len(user.password) < 12:
                 return redirect(url_for('profile.edit_profile'))
 ```
 
+
+## ASVS - 2.1.7
+
+A ASVS - 2.1.7 garante que não são consideradas válidas passwords que pertençam à lista das 10.000 passwords mais comuns do mundo (PASSWORDS.txt).
+
+## Demonstração
+	Método de implementação:
+
+```python
+@auth.route('/register', methods=['POST'])
+def register_post():
+	common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
+
+	if password == confirm_password:	
+
+			for line in common_passwords:
+				common = []
+				if password == line.strip():
+					common.append(password)
+					flash('Invalid password. Password cannot be a common password.')
+					return redirect(url_for('auth.register'))
+```
+
+## Correção
+
+
+## Demonstração
+
+
+## Correção
+
+## ASVS - 2.2.1
+
+A ASVS - 2.2.1 garante que o web service seja resistente contra ataques de brut force.
+
+## Demonstração
+
+Para isso implementámos:
+```python
+if user.failed_login_attempts >= 2:
+                user.last_login_attempt = datetime.now() + timedelta(seconds=30)
+                flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
+            db.session.commit()
+            return redirect(url_for('auth.login'))
+```
 
 ## ASVS - 2.2.3
 
