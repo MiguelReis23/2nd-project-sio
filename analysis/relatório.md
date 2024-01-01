@@ -165,7 +165,7 @@ Falta dizer porque é que escolhemos isto!!!
 
 ## Correção
 
-
+## ASVS - 4.2.2
 
 
 ## Demonstração
@@ -179,10 +179,45 @@ Falta dizer porque é que escolhemos isto!!!
 ## ASVS - 4.3.1
 
 A ASVS - 4.3.1 garante que para ter acesso aos à conta de um determinado utilizador este tenha de passar por um processo de auntenticação multifatorial.
+Para isso usámos o TOTP authentication login que através de one-time passwords autentica os utlizadores.
+Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode que ao scannear com uma aplicação de autitucação como o google authenticator ou a Authy fica com acesso a essas mesmas one time passwords. 
 
 ## Demonstração
+Foi implementado o sistema de MFA recorrendo à biblioteca do python tyotp e qrcode.<br>
+A biblioteca tyotp é usada tanto para a criação das one-time passwords como para a verificação de que os códigos introduzidos pelos utilizadores são válidos.
+```python
+  else:
+            flash('Account successfuly created.')
+            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
+            db.session.add(new_user)
+            key= pyotp.random_base32()
+            new_user.key=key
+            totp= pyotp.TOTP(key).provisioning_uri(username, issuer_name="Detimerch")
+            dir_path = os.path.dirname(os.path.abspath(__file__))
+            qrcode.make(totp).save(os.path.join(dir_path, "static/assets/QR.png"))
+            db.session.commit()
+```
+```python
+def login_post():
+    user = User.query.filter_by(username=username).first()
+    facode = request.form.get('2facode')
+    totp= pyotp.TOTP(user.key)
 
-
+    if not user:
+        flash('Please check your login details and try again.')
+        return redirect(url_for('auth.login'))
+    else:
+        if check_password_hash(user.password, password) and totp.verify(facode):
+            if user.failed_login_attempts >= 2:
+                if user.last_login_attempt and user.last_login_attempt > datetime.now():
+                    flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
+                    return redirect(url_for('auth.login'))
+                elif user.last_login_attempt and user.last_login_attempt <= datetime.now():
+                    flash('Your account is now unlocked.')
+                    user.reset_failed_login_attempts()
+                    db.session.commit()
+                    time.sleep(0.1)
+```
 
 ## ASVS - 5.3.6
 
