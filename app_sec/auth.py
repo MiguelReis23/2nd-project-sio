@@ -112,7 +112,7 @@ def register_post():
             common = []
             if password == line.strip():
                 common.append(password)
-                flash('Invalid password. Password cannot be a common password.')
+                flash('Password has been found in data breaches. Please choose a different password.')
                 return redirect(url_for('auth.register'))
             
         if len(password) < 12:
