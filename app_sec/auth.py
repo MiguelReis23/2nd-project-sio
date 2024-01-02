@@ -13,6 +13,13 @@ import qrcode
 from flask import Flask
 import hashlib
 import requests
+from base64 import urlsafe_b64encode, urlsafe_b64decode
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import serialization
+from cryptography.fernet import Fernet
 
 
 auth = Blueprint('auth', __name__)
@@ -30,7 +37,7 @@ def login_post():
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
     facode = request.form.get('2facode')
-    totp= pyotp.TOTP(user.key)
+    encrypted_key = user.key
 
     if not user:
         flash('Please check your login details and try again.')
@@ -38,24 +45,35 @@ def login_post():
     else:
 
 
-        if check_password_hash(user.password, password) and totp.verify(facode):
-            if user.failed_login_attempts >= 2:
-                if user.last_login_attempt and user.last_login_attempt > datetime.now():
-                    flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
-                    return redirect(url_for('auth.login'))
-                elif user.last_login_attempt and user.last_login_attempt <= datetime.now():
-                    flash('Your account is now unlocked.')
+        if check_password_hash(user.password, password):
+            decrypted_key = decrypt_key(encrypted_key, username, password)
+            totp = pyotp.TOTP(decrypted_key)
+            if totp.verify(facode):
+                if user.failed_login_attempts >= 2:
+                    if user.last_login_attempt and user.last_login_attempt > datetime.now():
+                        flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
+                        return redirect(url_for('auth.login'))
+                    elif user.last_login_attempt and user.last_login_attempt <= datetime.now():
+                        flash('Your account is now unlocked.')
+                        user.reset_failed_login_attempts()
+                        db.session.commit()
+                        time.sleep(0.1)
+                else:
                     user.reset_failed_login_attempts()
+                    user.last_login_attempt = datetime.now()
                     db.session.commit()
-                    time.sleep(0.1)
+                    login_user(user, remember=True)
+                    return redirect(url_for('main.index'))
             else:
-                user.reset_failed_login_attempts()
-                user.last_login_attempt = datetime.now()
+                flash('Please check your login details and try again.')
+                user.increment_failed_login_attempts()
+                if user.failed_login_attempts >= 2:
+                    user.last_login_attempt = datetime.now() + timedelta(seconds=30)
+                    flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
                 db.session.commit()
-                login_user(user, remember=True)
-                return redirect(url_for('main.index'))
-            
-        elif not check_password_hash(user.password, password) and not totp.verify(facode):
+                return redirect(url_for('auth.login'))
+                
+        elif not check_password_hash(user.password, password):
             flash('Please check your login details and try again.')
             user.increment_failed_login_attempts()
             if user.failed_login_attempts >= 2:
@@ -132,6 +150,7 @@ def register_post():
             flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
         elif len(password) > 128:
+            
             flash('Password must have at most 128 characters.')
             return redirect(url_for('auth.register'))
         
@@ -140,12 +159,13 @@ def register_post():
             new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             key= pyotp.random_base32()
-            new_user.key=key
             totp= pyotp.TOTP(key).provisioning_uri(username, issuer_name="Detimerch")
+            encrypted_key=encrypt_key(key, username, password)
+            print(password)
+            new_user.key=encrypted_key
             dir_path = os.path.dirname(os.path.abspath(__file__))
             qrcode.make(totp).save(os.path.join(dir_path, "static/assets/QR.png"))
             db.session.commit()
-
             msg = Message("Account created")
             msg.recipients= [email]
             msg.body = """Dear {username},
@@ -164,3 +184,32 @@ def register_post():
 
 
             return render_template('QRcode.html', key=key)
+
+
+
+def encrypt_key(key, username, password):
+    kdf= PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=username.encode(),
+        iterations=100000,
+        backend=default_backend()
+    )
+    derived_key= urlsafe_b64encode(kdf.derive(password.encode()))
+    f= Fernet(derived_key)
+    encrypted_key= f.encrypt(key.encode())
+    return encrypted_key
+
+
+def decrypt_key(key, username, password):
+    kdf= PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=username.encode(),
+        iterations=100000,
+        backend=default_backend()
+    )
+    derived_key= urlsafe_b64encode(kdf.derive(password.encode()))
+    f= Fernet(derived_key)
+    decrypted_key= f.decrypt(key).decode()
+    return decrypted_key

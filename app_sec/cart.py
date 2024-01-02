@@ -95,8 +95,6 @@ def checkout():
 
 
 
-
-
 @crt.route('/cart/checkout/confirm', methods=['POST'])
 @login_required
 def confirm_checkout():

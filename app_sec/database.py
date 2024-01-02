@@ -6,6 +6,12 @@ from app_sec.models import Product
 from app_sec.models import Category
 from werkzeug.security import generate_password_hash
 import pyotp
+import qrcode
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
+from cryptography.fernet import Fernet
+from base64 import urlsafe_b64encode, urlsafe_b64decode
 
 database = Blueprint('database', __name__)
 
@@ -23,14 +29,13 @@ def create_users():
         'email': 'user1@ua.pt',
         'password': generate_password_hash('Password123#', method='sha256'),
         'first_name': 'user',
-        'last_name': 'one',
         'isAdmin': False,
         'phone_number': '123456789',
         'image': 'default.png',
         'address': 'Aveiro',
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
-        'key': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+        'key': encrypt_key('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'Password123#', 'user1')
     }, {
         'username': 'user2',
         'email': 'user2@ua.pt',
@@ -38,8 +43,8 @@ def create_users():
         'first_name': 'user',
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
-        'key': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-    },{
+        'key': encrypt_key('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'Password456#', 'user2')
+    }, {
         'username': 'lucifer666',
         'email': 'lucifer666@ua.pt',
         'password': generate_password_hash('Hell!23456789', method='sha256'),
@@ -47,8 +52,7 @@ def create_users():
         'isAdmin': True,
         'failed_login_attempts': 0,
         'last_login_attempt': datetime.utcnow(),
-        'key':'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-        
+        'key': encrypt_key('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'Hell!23456789', 'lucifer666')
     }]
     try:
         db.session.bulk_insert_mappings(User, users)
@@ -145,3 +149,34 @@ def create_all():
     create_products()
     # create_cart()
     return jsonify({'message': 'All created successfully!'})
+
+
+
+def encrypt_key(key, password, salt):
+    salt = salt.encode()
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    derived_key = urlsafe_b64encode(kdf.derive(password.encode()))
+    f = Fernet(derived_key)
+    encrypted_key = f.encrypt(key.encode())
+    return encrypted_key
+
+
+def decrypt_key(encrypted_key, password, salt):
+    salt = salt.encode()
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
+    derived_key = urlsafe_b64encode(kdf.derive(password.encode()))
+    f = Fernet(derived_key)
+    key = f.decrypt(encrypted_key).decode()
+    return key

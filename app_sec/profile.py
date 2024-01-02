@@ -31,18 +31,7 @@ def edit_profile():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     phone_number = request.form.get('phone_number')
-    address = request.form.get('address')
-    
-    # image = request.files.get('image')
-
-    # if image and not image.filename.endswith('.png') and not image.filename.endswith('.jpeg'):
-    #     print('Please upload a .png or .jpeg image.')
-    #     return redirect(url_for('profile.edit_profile', id=current_user.id))
- 
-    #password = request.form.get('password')
-
-
-  
+    address = request.form.get('address')  
     user = User.query.filter_by(id=current_user.id).first()
     current_email = user.email
     old_password = request.form.get('old_password')
@@ -71,11 +60,8 @@ def edit_profile():
 
     if userF:
         flash('Username already exists.')
-        return redirect(url_for('auth.register'))
+        return redirect(url_for('profile.edit_profile'))
     
-    if user_email:
-        flash('Email address already exists.')
-        return redirect(url_for('auth.register'))
 
     if old_password:
         if not check_password_hash(user.password, old_password):
@@ -170,13 +156,7 @@ def edit_profile():
 
                 mail.send(msg)
                 db.session.commit()     
-                return redirect(url_for('profile.edit_profile'))
-
-    
-        # if image:
-        #     user.image = image.filename
-        #     image.save(os.path.join("app/static/pictures",image.filename))
-    
+                return redirect(url_for('profile.profile'))
     
     return redirect(url_for('profile.profile'))
 
@@ -184,6 +164,20 @@ def edit_profile():
 @login_required
 def delete_profile():
     user = User.query.filter_by(id=current_user.id).first()
-    db.session.delete(user)
-    db.session.commit()
-    return redirect(url_for('auth.logout')) 
+    old_password = request.form.get('old_password')
+
+    if old_password:
+        if not check_password_hash(user.password, old_password):
+            flash('Please check your password and try again.')
+            return redirect(url_for('profile.edit_profile'))
+        
+        elif check_password_hash(user.password, old_password):
+            db.session.delete(user)
+            db.session.commit()
+    else:
+        flash('Please check your password and try again.')
+        return redirect(url_for('profile.edit_profile'))    
+        
+    flash('Account deleted successfully!')
+    return redirect(url_for('auth.login'))
+        

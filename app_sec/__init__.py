@@ -9,7 +9,7 @@ import os
 
 db = SQLAlchemy()
 mail= Mail()
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
 
 def create_app():
 
@@ -22,7 +22,7 @@ def create_app():
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['SESSION_COOKIE_NAME'] = 'session'
     app.config['SESSION_COOKIE_PATH'] = '/'
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
 
     app.config['MAIL_SERVER']='smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
@@ -76,9 +76,10 @@ def create_app():
     from .search import src as search_blueprint
     app.register_blueprint(search_blueprint)
 
-    # Apply rate limiting to specific blueprints or routes
-    limiter.limit("500/day")(main_blueprint)
-    limiter.limit("50/day")(auth_blueprint)
+    # Apply rate limiting to all blueprints
+    
+    limiter.limit("500 per day")(cart_blueprint)
+    limiter.limit("50 per day")(auth_blueprint)
 
     return app
 
