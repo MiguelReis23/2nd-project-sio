@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 import pyotp
 import os
 import qrcode
-from flask import Flask,abort
 
 
 auth = Blueprint('auth', __name__)
