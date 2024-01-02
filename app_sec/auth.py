@@ -98,12 +98,6 @@ def register_post():
 
     response = requests.get(api_url)    # Check if the HIBP API request was successful
 
-    if response.status_code == 200:
-        hashes = (line.split(':') for line in response.text.splitlines())
-        found_hashes = {h[0]: h[1] for h in hashes}
-        if suffix in found_hashes:
-            flash('Password has been found in data breaches. Please choose a different password.')
-            return redirect(url_for('auth.register'))
     if user:
         flash('Username already exists.')
         return redirect(url_for('auth.register'))
@@ -128,6 +122,14 @@ def register_post():
             
             flash('Password must have at most 128 characters.')
             return redirect(url_for('auth.register'))
+        
+        elif response.status_code == 200:
+            hashes = (line.split(':') for line in response.text.splitlines())
+            found_hashes = {h[0]: h[1] for h in hashes}
+            if suffix in found_hashes:
+                flash('Password has been found in data breaches. Please choose a different password.')
+                return redirect(url_for('auth.register'))
+        
         else:
             flash('Account successfuly created.')
             new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
