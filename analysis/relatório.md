@@ -24,7 +24,7 @@
 
 - 4.3.1
 
-- 5.3.6
+- 5.2.2
 
 - 8.3.2
 
@@ -178,16 +178,17 @@ A ASVS - 3.2.3
 
 ## ASVS - 3.3.2
 
-A ASVS - 3.3.2 garante que um utilizador que se tenha logado com sucesso o tenha de se autenticar novamente passados 30 dias da autenticação anterior.
-Falta dizer porque é que escolhemos isto!!!
+A ASVS - 3.3.2 garante que um utilizador que se tenha logado com sucesso tenha de se autenticar novamente passado 1 dia após a sua ultima autenticação.<br>
+Considerámos importante limitar o tempo da sessão do utilizador pois em caso de roubo/furto de dispositivos que estejam autenticados no nosso site o deixem de estar rápidamente.
 
 ## Demonstração
 
-
-
-## Correção
+```python
+ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+```
 
 ## ASVS - 4.2.2
+
 
 
 ## Demonstração
@@ -241,13 +242,37 @@ def login_post():
                     time.sleep(0.1)
 ```
 
-## ASVS - 5.3.6
+## ASVS - 5.2.2
 
-REIS
+A ASVS - 5.3.6 garante que a aplicação está protegida contra JavaScript ou JSON injection.
+
+## Demonstração
+A nossa aplicação não estava completamente protegida contra ataques deste género no campo de pesquisa por produtos.<br>
+Para suprir essa vunerabilidade adicionámos uma camada extra de proteção com o seguinte excerto de código:
+
+```html
+function displayProductCards(products) {
+    let html = "";
+    var userInput = $("#search").val();
+    var sanitizedUserInput = $("<div>").text(userInput).html();
+    $("#search_result").html(
+    "Search results for: <strong>" + sanitizedUserInput + "</strong>");
+}
+```
 
 ## ASVS - 11.1.4
 
+A ASVS - 11.1.4 garante que a aplicação está protegida contra excessivos request simultanêos que podem causar falha nos recursos da mesma.<br>
+Considerámos esta ASVS um key issue a ser resolvido pois
 
+## Demonstração
+Para garantir o ontrolo de request implementámos o seguinte limite com recurso à biblioteca flask limit:
+
+```python
+ # Apply rate limiting to specific blueprints or routes
+    limiter.limit("500/day")(main_blueprint)
+    limiter.limit("50/day")(auth_blueprint)
+```
 
 ## ASVS - 13.2.3
 
@@ -255,9 +280,22 @@ REIS
 
 ## ASVS - 14.2.3
 
-REIS
+A ASVS - 14.2.3 garante que todos os serviços externos à aplicação são validados em termos de integridade.<br>
+Escolhemos esta ASVS como um dos key issues de forma a que todos os recursos externos ao nosso site não possam ser falsificados, garantindo que não teremos qualquer tipo de problema de segurança por parte de recursos externos utilizados.
+
+## Demonstração
+
+Exemplo de como a verificação de integridade foi feita:
+```html
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+    crossorigin="anonymous"
+/>
+```
 
 ## 3. Conclusão
 
-
+TENHO DE ESCREVER!
 
