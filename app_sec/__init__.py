@@ -22,7 +22,7 @@ def create_app():
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['SESSION_COOKIE_NAME'] = 'session'
     app.config['SESSION_COOKIE_PATH'] = '/'
-    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 
     app.config['MAIL_SERVER']='smtp.gmail.com'
     app.config['MAIL_PORT'] = 465
@@ -77,7 +77,7 @@ def create_app():
     app.register_blueprint(search_blueprint)
 
     # Apply rate limiting to specific blueprints or routes
-    limiter.limit("100/day")(main_blueprint)
+    limiter.limit("500/day")(main_blueprint)
     limiter.limit("50/day")(auth_blueprint)
 
     return app
