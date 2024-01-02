@@ -132,7 +132,6 @@ def register_post():
             flash('Password must have at least 12 characters.')
             return redirect(url_for('auth.register'))
         elif len(password) > 128:
-            
             flash('Password must have at most 128 characters.')
             return redirect(url_for('auth.register'))
         
