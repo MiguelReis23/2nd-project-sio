@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 import pyotp
 import os
 import qrcode
+from flask import Flask
 import hashlib
 import requests
 
@@ -89,6 +90,7 @@ def register_post():
     password = request.form.get('password')
     confirm_password = request.form.get('confirm_password')
     user = User.query.filter_by(username=username).first()
+    user_email = User.query.filter_by(email=email).first()
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
   	
     password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
@@ -98,8 +100,19 @@ def register_post():
 
     response = requests.get(api_url)    # Check if the HIBP API request was successful
 
+    if response.status_code == 200:
+        hashes = (line.split(':') for line in response.text.splitlines())
+        found_hashes = {h[0]: h[1] for h in hashes}
+        if suffix in found_hashes:
+            flash('Password has been found in data breaches. Please choose a different password.')
+            return redirect(url_for('auth.register'))
+
     if user:
         flash('Username already exists.')
+        return redirect(url_for('auth.register'))
+    
+    if user_email:
+        flash('Email address already exists.')
         return redirect(url_for('auth.register'))
     
     if password != confirm_password:      
@@ -122,13 +135,6 @@ def register_post():
             
             flash('Password must have at most 128 characters.')
             return redirect(url_for('auth.register'))
-        
-        elif response.status_code == 200:
-            hashes = (line.split(':') for line in response.text.splitlines())
-            found_hashes = {h[0]: h[1] for h in hashes}
-            if suffix in found_hashes:
-                flash('Password has been found in data breaches. Please choose a different password.')
-                return redirect(url_for('auth.register'))
         
         else:
             flash('Account successfuly created.')
