@@ -6,6 +6,8 @@ from app_sec import db, mail
 from flask_mail import Message
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
+import hashlib
+import requests
 
 prof = Blueprint('profile', __name__)
 
@@ -48,6 +50,20 @@ def edit_profile():
     confirm_new_password = request.form.get('confirm_new_password')
     
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
+    password_hash = hashlib.sha1(new_password.encode('utf-8')).hexdigest().upper()
+    prefix, suffix = password_hash[:5], password_hash[5:]
+
+    api_url = f'https://api.pwnedpasswords.com/range/{prefix}'
+
+    response = requests.get(api_url)    # Check if the HIBP API request was successful
+
+    if response.status_code == 200:
+        hashes = (line.split(':') for line in response.text.splitlines())
+        found_hashes = {h[0]: h[1] for h in hashes}
+        if suffix in found_hashes:
+            flash('Password has been found in data breaches. Please choose a different password.')
+            return redirect(url_for('auth.register'))
+
 
     if old_password:
         if not check_password_hash(user.password, old_password):

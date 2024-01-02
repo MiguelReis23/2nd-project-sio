@@ -3,10 +3,14 @@ from flask import Flask, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
 
 db = SQLAlchemy()
 mail= Mail()
+limiter = Limiter(key_func=get_remote_address)
+
 def create_app():
 
     app = Flask(__name__, template_folder='templates', static_folder='static', static_url_path='/static')
@@ -27,7 +31,7 @@ def create_app():
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_DEFAULT_SENDER'] = 'detimerch@gmail.com'
-    
+    limiter.init_app(app)
 
     db.init_app(app)
     mail.init_app(app)
@@ -71,6 +75,10 @@ def create_app():
 
     from .search import src as search_blueprint
     app.register_blueprint(search_blueprint)
+
+    # Apply rate limiting to specific blueprints or routes
+    limiter.limit("100/day")(main_blueprint)
+    limiter.limit("50/day")(auth_blueprint)
 
     return app
 
