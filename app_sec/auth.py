@@ -169,7 +169,6 @@ def register_post():
             msg = Message("Account created")
             msg.recipients= [email]
             msg.body = """Dear {username},
-            Dear {username},
             We are pleased to inform you that your account has been created successfully in Deti@merch.
 
             If you did not create an account in Deti@merch, please ignore this email.

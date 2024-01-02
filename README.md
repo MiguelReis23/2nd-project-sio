@@ -10,29 +10,43 @@ Para satisfazer os requisitos do trabalho que nos foi entregue foram criadas dua
 - GABRIEL JANICAS DA SILVA **108689**<br>
 - MARTIM HENRIQUES CARVALHO **108749**<br>
 - MIGUEL ROSA REIS **108545**<br>
-- RAFAEL ANDRE VALENTE LEITE **108257**<br>
 - RODRIGO MIGUEL BARROS MOÇO **108939**<br>
 
 
-## Vulnerabilities
+## Key Issues
 
-- CWE - 89
+- ASVS - 2.1.7
 
-- CWE - 79
+- ASVS - 2.1.8
 
-- CWE - 862
+- ASVS - 2.2.1
 
-- CWE - 307
+- ASVS - 2.2.3
 
-- CWE - 20
+- ASVS - 3.2.3
 
-- CWE - 200
+- ASVS - 3.3.2
 
-- CWE - 620
+- ASVS - 4.2.2
 
-- CWE - 756
+- ASVS - 4.3.1
 
-- CWE - 256
+- ASVS - 5.3.6
+
+- ASVS - 8.3.2
+
+- ASVS - 11.1.4
+
+- ASVS - 13.2.3
+
+- ASVS - 14.2.3
+
+
+## Features
+
+
+
+
 
 ## RUN
 

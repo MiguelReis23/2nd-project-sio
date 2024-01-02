@@ -23,6 +23,13 @@ def create_app():
     app.config['SESSION_COOKIE_NAME'] = 'session'
     app.config['SESSION_COOKIE_PATH'] = '/'
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
+    app.config['X-POWERED-BY'] = 'Detimerch'
+    app.config['X-CONTENT-TYPE-OPTIONS'] = 'nosniff'
+    app.config['X-FRAME-OPTIONS'] = 'SAMEORIGIN'
+    app.config['Referrer-Policy'] = 'no-referrer'
+    app.config['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    app.config['Pragma'] = 'no-cache'
+
 
     app.config['MAIL_SERVER']='smtp.gmail.com'
     app.config['MAIL_PORT'] = 465

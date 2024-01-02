@@ -39,8 +39,7 @@ def edit_profile():
     confirm_new_password = request.form.get('confirm_new_password')
     username = request.form.get('first_name')
     email = request.form.get('email')
-    userF = User.query.filter_by(username=username).first()
-    user_email = User.query.filter_by(email=email).first()
+
     
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
     password_hash = hashlib.sha1(new_password.encode('utf-8')).hexdigest().upper()
@@ -55,13 +54,8 @@ def edit_profile():
         found_hashes = {h[0]: h[1] for h in hashes}
         if suffix in found_hashes:
             flash('Password has been found in data breaches. Please choose a different password.')
-            return redirect(url_for('auth.register'))
+            return redirect(url_for('profile.edit'))
 
-
-    if userF:
-        flash('Username already exists.')
-        return redirect(url_for('profile.edit_profile'))
-    
 
     if old_password:
         if not check_password_hash(user.password, old_password):
