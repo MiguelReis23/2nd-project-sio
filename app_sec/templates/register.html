@@ -19,30 +19,43 @@
 
     <!-- Pagina Registo -->
     <form action="/register" method="post">
+        {{reg.csrf_token}}
         <div class="main">
             <div class="main-login"></div>
             <div class="log">
                 <h2>Cria já a tua conta</h2>
 
                 <div class="textfield">
-                    <label for="uname"><b>Username</b></label>
-                    <input id="username" type="text" placeholder="Enter Username" name="username" required>
+                    {{reg.username.label}}
+                    {{reg.username(class="form-control", placeholder="Enter Username")}}
+                    {% for error in reg.username.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="textfield">
-                    <label for="mail"><b>E-mail</b></label>
-                    <input id="email" type="email" placeholder="Enter E-mail" name="email" required>
+                    {{reg.email.label}}
+                    {{reg.email(class="form-control", placeholder="Enter Email")}}
+                    {% for error in reg.email.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <div class="textfield">
-                    <label for="psw"><b>Password</b></label>
-                    <input id="password" type="password" placeholder="Enter Password" name="password" required oninput="checkPasswordStrength(this.value)">
+                    {{reg.password.label}}
+                    {{reg.password(class="form-control", placeholder="Enter Password", onkeyup="checkPasswordStrength(this.value)")}}
+                    {% for error in reg.password.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
                     <div id="password-strength"></div>
                 </div>
 
                 <div class="textfield">
-                    <label for="psw"><b>Confirm Password</b></label>
-                    <input id="cpassword" type="password" placeholder="Confirm Password" name="confirm_password" required>
+                    {{reg.confirm_password.label}}
+                    {{reg.confirm_password(class="form-control", placeholder="Confirm Password")}}
+                    {% for error in reg.confirm_password.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
                 </div>
 
                 <button class="btn-login">Registar</button>

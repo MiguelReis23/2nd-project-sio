@@ -21,95 +21,70 @@
   <div class="container">
     <div class="profile-box">
       <form method="POST">
+        {{profile.csrf_token}}
         <div class="right-info">
           <div class="card-info">
             <h2>Edit Your Acount Details</h2>
             <div class="textfield">
-              <label for="uname"><b>Name</b></label>
-              <input
-                id="username"
-                value="{{user.first_name}}"
-                type="text"
-                placeholder="Name"
-                name="first_name"
-                required
-              />
+              {{profile.first_name.label}}
+              {{profile.first_name(class="form-control", value=user.first_name)}}
+              {% for error in profile.first_name.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <div class="textfield">
-              <label for="psw"><b>Last Name</b></label>
-              <input
-                id="password"
-                value="{{user.last_name}}"
-                type="text"
-                placeholder="Last Name"
-                name="last_name"
-                required
-              />
+              {{profile.last_name.label}}
+              {{profile.last_name(class="form-control", value=user.last_name)}}
+              {% for error in profile.last_name.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <div class="textfield">
-              <label for="psw"><b>Email</b></label>
-              <input
-                id="password"
-                value="{{user.email}}"
-                type="text"
-                placeholder="Email"
-                name="email"
-                required
-              />
+             {{profile.email.label}}
+              {{profile.email(class="form-control", value=user.email)}}
+              {% for error in profile.email.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <div class="textfield">
-              <label for="psw"><b>Phone Number</b></label>
-              <input
-                id="password"
-                value="{{user.phone_number}}"
-                type="text"
-                placeholder="Phone Number"
-                name="phone_number"
-              />
+              {{profile.phone_number.label}}
+              {{profile.phone_number(class="form-control", value=user.phone_number)}}
+              {% for error in profile.phone_number.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <div class="textfield">
-              <label for="psw"><b>Adress</b></label>
-              <input
-                id="password"
-                value="{{user.address}}"
-                type="text"
-                placeholder="Adress"
-                name="address"
-              />
+              {{profile.address.label}}
+              {{profile.address(class="form-control", value=user.address)}}
+              {% for error in profile.address.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <div class="textfield">
-              <label for="psw"><b>Current Password</b></label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Current Password"
-                name="old_password"
-                required
-              />
+              {{profile.old_password.label}}
+              {{profile.old_password(class="form-control", placeholder="Old Password")}}
+              {% for error in profile.old_password.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
           </div>
           <br />
           <div class="more-info">
             <h2>Change Your Password</h2>
             <div class="textfield">
-              <label for="psw"><b>New Password</b></label>
-              <input
-                id="password"
-                type="password"
-                placeholder="New Password"
-                name="new_password"
-                oninput="checkPasswordStrength(this.value)"
-              />
+              {{profile.new_password.label}}
+              {{profile.new_password(class="form-control", placeholder="New Password")}}
+              {% for error in profile.new_password.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
               <div id="password-strength"></div>
             </div>
             <div class="textfield">
-              <label for="psw"><b>Confirm New Password</b></label>
-              <input
-                id="cpassword"
-                type="password"
-                placeholder="Confirm New Password"
-                name="confirm_new_password"
-              />
+              {{profile.confirm_password.label}}
+              {{profile.confirm_password(class="form-control", placeholder="Confirm Password")}}
+              {% for error in profile.confirm_password.errors %}
+              <span class="text-danger">{{ error }}</span>
+              {% endfor %}
             </div>
             <button formaction="/edit_profile" class="btn-save">
               Save Changes

@@ -75,6 +75,10 @@ body *{
     cursor: pointer;
 }
 
+.form-control{
+    background-color:white;
+    color:black
+}
 
 @media only screen and(max-width: 950px) {
     .card-login{

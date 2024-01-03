@@ -26,6 +26,7 @@ def create_app():
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
     app.config['X-POWERED-BY'] = 'Detimerch'
     app.config['X-CONTENT-TYPE-OPTIONS'] = 'nosniff'
+    
     app.config['X-FRAME-OPTIONS'] = 'SAMEORIGIN'
     app.config['Referrer-Policy'] = 'no-referrer'
     app.config['Cache-Control'] = 'no-cache, no-store, must-revalidate'
@@ -40,6 +41,7 @@ def create_app():
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_DEFAULT_SENDER'] = 'detimerch@gmail.com'
     limiter.init_app(app)
+
     csrf = CSRFProtect(app)
     db.init_app(app)
     mail.init_app(app)

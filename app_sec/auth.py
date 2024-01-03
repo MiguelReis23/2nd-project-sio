@@ -30,7 +30,7 @@ auth = Blueprint('auth', __name__)
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    twofa_code = StringField('2FA Code', validators=[DataRequired()])
+    twofa_code = StringField('2facode', validators=[DataRequired()])
     submit = SubmitField('Login')
 
 class RegisterForm(FlaskForm):
@@ -53,19 +53,16 @@ def login_post():
     username = request.form.get('username')
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
-    facode = request.form.get('2facode')
+    twofa_code = request.form.get('twofa_code')
     encrypted_key = user.key
-
     if not user:
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
-
-
         if check_password_hash(user.password, password):
             decrypted_key = decrypt_key(encrypted_key, username, password)
             totp = pyotp.TOTP(decrypted_key)
-            if totp.verify(facode):
+            if totp.verify(twofa_code):
                 if user.failed_login_attempts >= 2:
                     if user.last_login_attempt and user.last_login_attempt > datetime.now():
                         flash(f'Please wait until {user.last_login_attempt.strftime("%H:%M:%S")} before trying again.')
@@ -113,11 +110,11 @@ def logout():
 
 @auth.route('/register')
 def register():
-    form = RegisterForm()
+    reg = RegisterForm()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     else:
-        return render_template('register.html', form=form)
+        return render_template('register.html', reg=reg)
     
 @auth.route('/register', methods=['POST'])
 def register_post():

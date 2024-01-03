@@ -402,7 +402,7 @@ return redirect(url_for('profile.edit_profile'))
 
  
 
-![Alt text](/analysis/images/email.png)<br> 
+![Alt text](./images/email.png)
 
  
 
@@ -437,8 +437,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_NAME'] = '_Host-detimerch_session' 
 
 app.config['SESSION_COOKIE_PATH'] = '/' 
-
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1) 
 
 app.config['X-POWERED-BY'] = 'Detimerch' 
 

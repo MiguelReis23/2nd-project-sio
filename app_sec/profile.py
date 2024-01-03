@@ -8,8 +8,26 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import hashlib
 import requests
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
 
 prof = Blueprint('profile', __name__)
+
+
+
+class ProfileForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    first_name = StringField('First name')
+    last_name = StringField('Last name')
+    phone_number = StringField('Phone number')
+    address = StringField('Address')
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    new_password = PasswordField('New password')
+    confirm_password = PasswordField('Confirm new password')
+    username = StringField('Username')
+    submit = SubmitField('Save changes')
 
 @prof.route('/profile')
 @login_required
@@ -20,8 +38,9 @@ def profile():
 @prof.route('/edit_profile/')
 @login_required
 def edit_page():
+    profile_form = ProfileForm()
     user = User.query.filter_by(id=current_user.id).first()
-    return render_template('edit_profile.html', user=user)
+    return render_template('edit_profile.html', user=user, profile=profile_form)
 
 
 @prof.route('/edit_profile', methods=['POST'])
@@ -37,8 +56,6 @@ def edit_profile():
     old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
     confirm_new_password = request.form.get('confirm_new_password')
-    username = request.form.get('first_name')
-    email = request.form.get('email')
 
     
     common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')

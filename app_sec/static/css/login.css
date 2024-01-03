@@ -70,6 +70,7 @@ body *{
     align-items: center;
 }
 
+
 @media only screen and(max-width: 950px) {
     .card-login{
         width: 85%;
