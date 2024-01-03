@@ -54,12 +54,13 @@ def login_post():
     password = request.form.get('password')
     user = User.query.filter_by(username=username).first()
     twofa_code = request.form.get('twofa_code')
-    encrypted_key = user.key
+
     if not user:
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login'))
     else:
         if check_password_hash(user.password, password):
+            encrypted_key = user.key
             decrypted_key = decrypt_key(encrypted_key, username, password)
             totp = pyotp.TOTP(decrypted_key)
             if totp.verify(twofa_code):
