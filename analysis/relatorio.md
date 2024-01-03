@@ -44,13 +44,12 @@ No desenvolvimento deste projeto procuramos resoler os problemas identificados p
 
 ## 2. ASVS 
 
-Entre as vulnerabilidades que o nosso site apresenta estas são as dez que considerámos mais urgentes de serem corrigidas devido ao nível de comprometimento em que podem deixar um utilizador ou entidade responsável site. 
+Entre as vulnerabilidades que o nosso site apresenta estas são as que considerámos mais urgentes de serem corrigidas devido ao nível de comprometimento em que podem deixar um utilizador ou entidade responsável site. 
 
 ## ASVS - 2.1.2 
 
 A ASVS - 2.2.1 consiste em criar uma verificação para o número de caracteres possíveis de serem aceites em uma password de um utilizador. De modo a uniformizar e a garantir a segurança dos utilizadores as passwords permitidas têm de ter entre 12 a 128 caracteres. 
-
-Falta dizer porque é que escolhemos isto!!! 
+Escolhemos esta ASVS pois é imporatante que todos os utilizadores tenham uma password devidamente extensa para por consequência se tornar mais segura.
 
 ### Demonstração 
 
@@ -66,80 +65,81 @@ elif len(user.password) > 128:
 ``` 
 ## ASVS - 2.1.7 
 
-A ASVS - 2.1.7 garante que não são consideradas válidas passwords que pertençam à lista das 10.000 passwords mais comuns do mundo (PASSWORDS.txt). 
+A ASVS - 2.1.7 garante que não são consideradas válidas passwords que pertençam à lista das 10.000 passwords mais comuns do mundo (PASSWORDS.txt).
+Escolhemos esta ASVS para garantir que a password do user não é descoberta com demasiada facilidade por ser considerada muito previsível.
 
 ## Demonstração 
 
-Método de implementação: - 13.2.3 in.css" 
-	rel="stylesheet" 
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
-	crossorigin="anonymous" 
-@auth.route('/register', methods=['POST']) 
+	Demonstração da implementação e verificação do que foi enunciado a cima:
 
-def register_post(): 
-
-common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8') 
-if password == confirm_password:  
-	for line in common_passwords: 
-		common = [] 
-		if password == line.strip(): 
-	common.append(password) 
-	flash('Invalid password. Password cannot be a common p	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
-	rel="stylesheet" 
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
-	crossorigin="anonymous" assword.') 
-return redirect(url_for('auth.register')) 
-
+```python
+@auth.route('/register', methods=['POST'])
+def register_post():
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    confirm_password = request.form.get('confirm_password')
+    user = User.query.filter_by(username=username).first()
+    user_email = User.query.filter_by(email=email).first()
+    common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
 ``` 
+```python
+for line in common_passwords:
+	common = []
+	if password == line.strip():
+		common.append(password)
+		flash('Password has been found in data breaches. Please choose a different password.')
+		return redirect(url_for('auth.register'))
+```
+
 ## ASVS - 2.1.8 
 A ASVS - 2.1.8 garante que é fornecido ao utilizador um strength meter para que este possa avaliar a qualidade da sua password e com isso ser influenciado a tomar uma melhor decisão.<br>
 Escolhemos esta ASVS pois como não impomos outra restrição na criação de passwords (apenas limite mínimo e máximo de caracteres) o strength meter garante que o utilizador tenha conhecimento de quanto a sua password é vulnerável. 
 ## Demonstração 
 
-Para a implementação desta mesma feature utilizamos o segu	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" 
-	rel="stylesheet" 
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" 
-	crossorigin="anonymous" inte script: 
+Para a implementação desta mesma feature utilizamos o seguinte script:
+
 ```html 
-<script> 
-function checkPasswordStrength(password) { 
-var hasUpperCase = /[A-Z]/.test(password); 
-var hasLowerCase = /[a-z]/.test(password); 
-var hasDigit = /\d/.test(password); 
-var hasSpecialChar = /[!@#$%^&*()_+{}|:"<>?]/.test(password); 
-var strength = 0; 
-if (password.length >= 12 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar) { 
-strength = 2; // Strong 
-} else if (password.length >= 8 && hasUpperCase && hasLowerCase) { 
-strength = 1; // Moderate 
-} else { 
+<script>
+	function checkPasswordStrength(password) {
+	var hasUpperCase = /[A-Z]/.test(password);
+	var hasLowerCase = /[a-z]/.test(password);
+	var hasDigit = /\d/.test(password);
+	var hasSpecialChar = /[!@#$%^&*()_+{}|:"<>?]/.test(password);
+	var strength = 0;
 
-strength = 0; // Weak 
-} 
-displayStrength(strength); 
-
-} 
-function displayStrength(strength) { 
-	var strengthMeter = document.getElementById("password-strength"); 
-	var strengthText; 
-	if (strength === 0) { 
-		strengthText = "Weak"; 
-	} else if (strength === 1) { 
-		strengthText = "Moderate"; 
-	} else if (strength === 2){ 
-		strengthText = "Strong"; 
-	} 
-	strengthMeter.textContent = "Password Strength: " + strengthText; 
+	if (password.length >= 12 && hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar) {
+		strength = 2; // Strong
+	} else if (password.length >= 8 && hasUpperCase && hasLowerCase) {
+		strength = 1; // Moderate
+	} else {
+		strength = 0; // Weak
+	}
+	displayStrength(strength);
 }
-</script> 
+	function displayStrength(strength) {
+		var strengthMeter = document.getElementById("password-strength");
+		var strengthText;
+
+		if (strength === 0) {
+			strengthText = "Weak";
+		} else if (strength === 1) {
+			strengthText = "Moderate";
+		} else if (strength === 2){
+			strengthText = "Strong";
+		}
+		strengthMeter.textContent = "Password Strength: " + strengthText;
+	}
+</script>
 ``` 
 ## ASVS - 2.2.1 
 
-A ASVS - 2.2.1 garante que o web service seja resistente contra ataques de brut force. 
+A ASVS - 2.2.1 garante que o web service seja resistente contra ataques de brut force.
+Escolhemos esta ASVS pois ataques deste género são bastante comuns e podem causar danos graves aos nossos utilizadores.
 
 ## Demonstração 
 
-Para isso implementámos: 
+Para isso implementámos:
 
 ```python 
 if user.failed_login_attempts >= 2:
@@ -217,7 +217,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 
 ## ASVS - 4.2.2 e 13.2.3
  
-A ASVS - 4.2.2 garante que o site é seguro contra ataques de CSRF (Cross-Site Request Forgery), para isso foi implementado a criação de tokens anti-CSRF e assim sempre que um user faça um qualquer request o site compara o token desse user e confirma se este é válido ou não.
+A ASVS - 4.2.2 garante que o site é seguro contra ataques de CSRF (Cross-Site Request Forgery), para isso foi implementado a criação de tokens anti-CSRF e assim sempre que um user faça qualquer request o site compara o token desse user e confirma se este é válido ou não.
 Escolhemos esta ASVS pois os ataques por via de CSRF são bastante nocivos para os utilizadores e estão cada vez mais comuns nos dias de hoje.
 
 ## Demonstração 
@@ -272,7 +272,7 @@ class RegisterForm(FlaskForm):
                     {% endfor %}
                 </div>
 ```
-```py
+```python
 @auth.route('/register')
 def register():
     reg = RegisterForm()
@@ -284,9 +284,9 @@ def register():
 
 ## ASVS - 4.3.1 
 
-A ASVS - 4.3.1 garante que para ter acesso aos à conta de um determinado utilizador este tenha de passar por um processo de auntenticação multifatorial.<br>
+A ASVS - 4.3.1 garante que para ter acesso à conta de um determinado utilizador este tenha de passar por um processo de auntenticação multifatorial.<br>
 Para isso usámos o TOTP authentication login que através de one-time passwords autentica os utilizadores.<br>
-Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords.<br>
+Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode,ao utilizador, que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords.<br>
 Escolhemos esta ASVS pois a autenticação multifator é um método crucial para prevenção de roubo de contas.
 
 ## Demonstração 
@@ -357,7 +357,7 @@ A ASVS - 11.1.4 garante que a aplicação está protegida contra excessivos requ
 Considerámos esta ASVS um key issue a ser resolvido pois proteção contra pedidos excessivos na aplicação o que poderia levar a sobrecarga da mesma.
 
 ## Demonstração 
-Para garantir o ontrolo de request implementámos o seguinte limite com recurso à biblioteca flask-limiter: 
+Para garantir o controlo de request implementámos o seguinte limite com recurso à biblioteca flask-limiter: 
 
 ```python 
 limiter = Limiter(key_func=get_remote_address, default_limits=["200 per day", "50 per hour"])
