@@ -1,9 +1,7 @@
 ## Description
 
-No nosso projeto foi desenvolvido um website de uma loja online que vende exclusivamente produtos alusivos ao DETI. 
-Dentro do mesmo é possível criar-se um utilizador e fazer login com o mesmo, pode ainda adicionar os seus produtos preferidos a uma lista de favoritos assim como adiciona-los diretamente ao carrinho de compras. 
-Para implementar este site foi usado com base uma aplicação em flask com base em paginas de html e uma base de dados em SQLite.<br> 
-Para satisfazer os requisitos do trabalho que nos foi entregue foram criadas duas versões da aplicação, a app.py é a versão que foi sujeita a vários ataques provocados propositalmente para mostrar as suas vulnerabilidades, já a app_sec.py é uma app que foi desenvolvida de modo a ser segura sobre todos os ataques feitos no primeiro caso.<br> 
+This project was developed for the course of Information And Organisational Security (SIO) and the goal was to present a web application that would be an online shop to sell DETI memorabilia,
+The purpose of this delivery was to work upon the first delivery of the project, improving the security of the application and adding new features.
 
 ## Authors
 
@@ -23,7 +21,7 @@ Para satisfazer os requisitos do trabalho que nos foi entregue foram criadas dua
 
 - ASVS - 2.2.3
 
-- ASVS - 3.2.3
+- ASVS - 3.2.3 and 3.4.x
 
 - ASVS - 3.3.2
 
@@ -44,8 +42,13 @@ Para satisfazer os requisitos do trabalho que nos foi entregue foram criadas dua
 
 ## Features
 
+From the list of software features given by the teacher, we implemented the following:
 
+- Password strength evaluation, requiring at least 12 characters and at most 128 according to v2.1 of the ASVS and breach verification with resource of Have I Been Pwned API.
 
+-Multi-factor authentication impemented with TOTP (Time-based One-Time Password) to authorize access to the application.
+
+-Encryption of sensitive data in the database including passwords and the key used to generate the TOTP.
 
 
 ## RUN
