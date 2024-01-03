@@ -13,32 +13,31 @@ The purpose of this delivery was to work upon the first delivery of the project,
 
 ## Key Issues
 
-- ASVS - 2.1.7
+- 2.1.2 
 
-- ASVS - 2.1.8
+- 2.1.7 
 
-- ASVS - 2.2.1
+- 2.1.8 
 
-- ASVS - 2.2.3
+- 2.2.1 
 
-- ASVS - 3.2.3 and 3.4.x
+- 2.2.3 
 
-- ASVS - 3.3.2
+- 3.2.3 e 3.4.X 
 
-- ASVS - 4.2.2
+- 3.3.2 
 
-- ASVS - 4.3.1
+- 4.2.2 e 13.2.3 
 
-- ASVS - 5.3.6
+- 4.3.1 
 
-- ASVS - 8.3.2
+- 5.3.6 
 
-- ASVS - 11.1.4
+- 8.3.2 
 
-- ASVS - 13.2.3
+- 11.1.4 
 
-- ASVS - 14.2.3
-
+- 14.2.3 
 
 ## Features
 
