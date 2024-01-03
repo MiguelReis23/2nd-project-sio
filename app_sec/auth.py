@@ -20,15 +20,33 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
 from cryptography.fernet import Fernet
 
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
 
 auth = Blueprint('auth', __name__)
 
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    twofa_code = StringField('2FA Code', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
 @auth.route('/login')
 def login():
+    form = LoginForm()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     else:
-        return render_template('login.html')
+        return render_template('login.html', form=form)
     
 @auth.route('/login', methods=['POST'])
 def login_post():
@@ -95,10 +113,11 @@ def logout():
 
 @auth.route('/register')
 def register():
+    form = RegisterForm()
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     else:
-        return render_template('register.html')
+        return render_template('register.html', form=form)
     
 @auth.route('/register', methods=['POST'])
 def register_post():

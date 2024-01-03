@@ -19,20 +19,30 @@
          {%endfor%} 
 <!-- Pagina login -->
 <form action="/login" method="post">
+    {{ form.csrf_token }}
     <div class="main">
         <div class="log">
             <h2>Log in to your account</h2>
             <div class="textfield">
-                <label for="uname"><b>Username</b></label>
-                <input id= "username" type="text" placeholder="Enter Username" name="username" required>
+                {{ form.username.label }} 
+                    {{ form.username(class="form-control", placeholder="Enter Username") }}
+                    {% for error in form.username.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
             </div>
             <div class="textfield"> 
-                <label for="psw"><b>Password</b></label>
-                <input id="password" type="password" placeholder="Enter Password" name="password" required>
+                {{ form.password.label }} 
+                {{ form.password(class="form-control", placeholder="Enter Password") }}
+                {% for error in form.password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
             </div>
             <div class="textfield">
-                <label for="2fa"><b>2FA Code</b></label>
-                <input id="2fa" type="text" placeholder="Enter 2FA Code" name="2facode" required>
+                {{ form.twofa_code.label }} 
+                {{ form.twofa_code(class="form-control", placeholder="Enter 2FA Code") }}
+                {% for error in form.twofa_code.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                {% endfor %}
             </div>
             <button class="btn-login">Login</button>
         </div>

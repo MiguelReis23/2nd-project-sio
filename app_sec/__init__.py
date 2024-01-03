@@ -6,6 +6,7 @@ from flask_mail import Mail
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import os
+from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 mail= Mail()
@@ -39,7 +40,7 @@ def create_app():
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_DEFAULT_SENDER'] = 'detimerch@gmail.com'
     limiter.init_app(app)
-
+    csrf = CSRFProtect(app)
     db.init_app(app)
     mail.init_app(app)
 
@@ -61,6 +62,8 @@ def create_app():
         print(e)
         return render_template('404.html')
 
+    def handle_csrf_error(e):
+        return render_template('404.html', reason=e.description), 400
     
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
