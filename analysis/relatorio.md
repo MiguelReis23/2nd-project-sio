@@ -44,16 +44,16 @@ No desenvolvimento deste projeto procuramos resoler os problemas identificados p
 
 ## 2. ASVS 
 
-Entre as vulnerabilidades que o nosso site apresenta estas são as que considerámos mais urgentes de serem corrigidas devido ao nível de comprometimento em que podem deixar um utilizador ou entidade responsável site. 
+Entre as vulnerabilidades que o nosso site apresenta estas são as que considerámos mais urgentes de serem corrigidas devido ao nível de comprometimento em que podem deixar um utilizador ou o próprio site.
 
 ## ASVS - 2.1.2 
 
 A ASVS - 2.2.1 consiste em criar uma verificação para o número de caracteres possíveis de serem aceites em uma password de um utilizador. De modo a uniformizar e a garantir a segurança dos utilizadores as passwords permitidas têm de ter entre 12 a 128 caracteres. 
-Escolhemos esta ASVS pois é imporatante que todos os utilizadores tenham uma password devidamente extensa para por consequência se tornar mais segura.
+Escolhemos esta ASVS pois é importante que todos os utilizadores tenham uma password devidamente extensa para por consequência se tornar mais segura.
 
 ### Demonstração 
 
-De modo a regular o número máximo de caracteres usados em passwords de utilizadores foi implementado uma verificação no ato de registo dos utilizadores. 
+De modo a regular o número máximo de caracteres usados em passwords de utilizadores foi implementado uma verificação no ato de registo dos utilizadores e no ato de alteração de passwords.
 
 ```python 
 if len(user.password) < 12: 
@@ -134,8 +134,8 @@ Para a implementação desta mesma feature utilizamos o seguinte script:
 ``` 
 ## ASVS - 2.2.1 
 
-A ASVS - 2.2.1 garante que o web service seja resistente contra ataques de brut force.
-Escolhemos esta ASVS pois ataques deste género são bastante comuns e podem causar danos graves aos nossos utilizadores.
+A ASVS - 2.2.1 garante que o web service seja resistente contra ataques de brute force.
+Escolhemos esta ASVS pois ataques deste género são bastante comuns e podem comprometer a segurança de um utilizador.
 
 ## Demonstração 
 
@@ -151,12 +151,12 @@ if user.failed_login_attempts >= 2:
 ## ASVS - 2.2.3 
 
 A ASVS - 2.2.3 consiste em enviar informação de forma segura aos utilizadores sempre que estes alterem informações no seu regiisto.<br>
-A forma que escolhemos para enviar esta informação foi via email, assim o utilizador pode verificar que alterações foram efetuadas e caso não tenho sido o mesmo a fazê-las entarar em contacto com os proprietários do site.<br> 
+A forma que escolhemos para enviar esta informação foi via email, assim o utilizador pode verificar que foram efetuadas alterações e caso não tenho sido o mesmo a fazê-las entrar em contacto com os proprietários do site.<br> 
 De salientar que nenhuma informação sensivel é passada neste email.<br> 
  
 ## Demonstração 
 
-A implementação foi feita de modo que os utilizadores recebam um e-mail personalizado caso alterem a sua password ou qualquer outra informação no seu perfil. <br> 
+A implementação foi feita de modo a que os utilizadores recebam um e-mail personalizado caso alterem a sua password ou qualquer outra informação no seu perfil. <br> 
 Com isto os utilizadores estão mais seguros pois em caso de alteração indevida de informações do legitimo utilizador este poderá entrar em contacto com os proprietários do site para resolver rapidamente o seu problema. 
 
 ```python 
@@ -218,7 +218,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 ## ASVS - 4.2.2 e 13.2.3
  
 A ASVS - 4.2.2 garante que o site é seguro contra ataques de CSRF (Cross-Site Request Forgery), para isso foi implementado a criação de tokens anti-CSRF e assim sempre que um user faça qualquer request o site compara o token desse user e confirma se este é válido ou não.
-Escolhemos esta ASVS pois os ataques por via de CSRF são bastante nocivos para os utilizadores e estão cada vez mais comuns nos dias de hoje, devido à ingenuidade dos utilizadores. Para teste desta ASVS foi usado a ferramenta OWASP ZAP.
+Escolhemos esta ASVS pois os ataques por via de CSRF são bastante nocivos para os utilizadores e estão cada vez mais comuns nos dias de hoje, devido à ingenuidade dos utilizadores. Para teste desta ASVS foi usado a ferramenta OWASP ZAP e o Burp Suite.
 
 ## Demonstração 
 
@@ -284,9 +284,9 @@ def register():
 
 ## ASVS - 4.3.1 
 
-A ASVS - 4.3.1 garante que para ter acesso à conta de um determinado utilizador este tenha de passar por um processo de auntenticação multifatorial.<br>
+A ASVS - 4.3.1 garante que para ter acesso à conta de um determinado utilizador este tenha de passar por um processo de autenticação multifatorial.<br>
 Para isso usámos o TOTP authentication login que através de one-time passwords autentica os utilizadores.<br>
-Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode,ao utilizador, que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords.<br>
+Ao criar um perfil na nossa web-app o utilizador é apresentado um Qrcode ao utilizador, que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords.<br>
 Escolhemos esta ASVS pois a autenticação multifator é um método crucial para prevenção de roubo de contas.
 
 ## Demonstração 
@@ -353,7 +353,7 @@ $("#search_result").html(
 
 ## ASVS - 11.1.4 
 
-A ASVS - 11.1.4 garante que a aplicação está protegida contra excessivos request simultanêos que podem causar falha nos recursos da mesma. <br> 
+A ASVS - 11.1.4 garante que a aplicação está protegida contra excessivos request simultâneos que podem causar falha nos recursos da mesma. <br> 
 Considerámos esta ASVS um key issue a ser resolvido pois proteção contra pedidos excessivos na aplicação o que poderia levar a sobrecarga da mesma. Para o teste desta ASVS foi usado a ferramenta curl para fazer pedidos em massa.
 
 ## Demonstração 
@@ -396,7 +396,7 @@ Da lista de features apresentadas pelos docentes implementámos as seguintes:
 
 	- Implementámos a autenticação multifator com recurso à biblioteca pyotp de modo a usar temporary one-time passwords para autenticar os utilizadores no nosso site.
 
-	- Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords. Este Qrcode é gerado através de uma key que é armazenada na base de daados de forma cifrada e que mais tarde é usada no processo de login para verificar a TOTP inserida.
+	- Ao criar um perfil na nossa web-app o utilizador é apresentado a um Qrcode que ao dar scan com uma aplicação de autenticação (como o google authenticator ou a Authy por exemplo) fica com acesso a essas mesmas one-time passwords. Este Qrcode é gerado através de uma key que é armazenada na base de dados de forma cifrada e que mais tarde é usada no processo de login para verificar a TOTP inserida.
 
 - Encrypted database storage
 

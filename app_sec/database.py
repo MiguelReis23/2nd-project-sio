@@ -132,7 +132,11 @@ def create_categories():
     }, {
         'category_id': 2,
         'name': 'Clothing',
-    }]
+    },{
+        'category_id': 3,
+        'name': 'Other',
+    }
+    ]
     try:
         db.session.bulk_insert_mappings(Category, categories)
         db.session.commit()
