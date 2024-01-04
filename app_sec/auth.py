@@ -125,7 +125,7 @@ def register_post():
     confirm_password = request.form.get('confirm_password')
     user = User.query.filter_by(username=username).first()
     user_email = User.query.filter_by(email=email).first()
-    common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
+    common_passwords = open('app_sec/static/assets/PASSWORDS.txt', 'r', encoding='utf-8')
   	
     password_hash = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
     prefix, suffix = password_hash[:5], password_hash[5:]
