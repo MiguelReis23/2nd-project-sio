@@ -51,6 +51,7 @@
 					  <td>{{product.price}}€</td>
 					  <td>
 						<form action="/cart/update/{{product.id}}" method="POST">
+							{{cartupdate.csrf_token}}
 						<div class="qty">
 						  <input size="2"class="quantity" value="{{quantity}}" name="quantity">
 						  <button class="update"><i class="bx bx-check"></i></button>
@@ -60,6 +61,7 @@
 					  <td>{{product.price*quantity}}€</td>
 					  <td>
 						<form action="/cart/remove/{{product.id}}" method="POST">
+							{{cartremove.csrf_token}}
 						<button class="remove"><i class="bx bx-x"></i></button>
 						</form>
 					  </td>
@@ -82,6 +84,7 @@
 				  </footer>
 				</div>
 				<form class="botao" action="/cart/checkout" method="POST">
+					{{checkout.csrf_token}}
 				<button >Finalizar Compra</button>
 				</form>
 			  </aside>

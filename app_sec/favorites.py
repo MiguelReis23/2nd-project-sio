@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, Flask
 from flask_login import login_required, current_user    
 from app_sec.models import User, Wishlist, Product
+from app_sec.models import RemoveFromWishlistForm
 from app_sec import db
 
 
@@ -9,6 +10,7 @@ fvt= Blueprint('favorites', __name__)
 @fvt.route('/favorites', methods=['GET'])
 @login_required
 def favorite():
+    wishrem=RemoveFromWishlistForm()
     user=User.query.filter_by(id=current_user.id).first()
     wishlist = Wishlist.query.filter_by(user_id=current_user.id).all()
     product_details = [ Product.query.filter_by(id=wishlist_item.product_id).first() for wishlist_item in wishlist ]
@@ -16,7 +18,7 @@ def favorite():
     print("---------")
     print(product_details)
     print("---------")
-    return render_template('favorites.html', user=user, product_details=product_details)
+    return render_template('favorites.html', user=user, product_details=product_details, wishrem=wishrem)
 
 
 @fvt.route('/favorites/add/<int:product_id>', methods=['POST'])

@@ -218,7 +218,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 ## ASVS - 4.2.2 e 13.2.3
  
 A ASVS - 4.2.2 garante que o site é seguro contra ataques de CSRF (Cross-Site Request Forgery), para isso foi implementado a criação de tokens anti-CSRF e assim sempre que um user faça qualquer request o site compara o token desse user e confirma se este é válido ou não.
-Escolhemos esta ASVS pois os ataques por via de CSRF são bastante nocivos para os utilizadores e estão cada vez mais comuns nos dias de hoje.
+Escolhemos esta ASVS pois os ataques por via de CSRF são bastante nocivos para os utilizadores e estão cada vez mais comuns nos dias de hoje, devido à ingenuidade dos utilizadores. Para teste desta ASVS foi usado a ferramenta OWASP ZAP.
 
 ## Demonstração 
 
@@ -354,7 +354,7 @@ $("#search_result").html(
 ## ASVS - 11.1.4 
 
 A ASVS - 11.1.4 garante que a aplicação está protegida contra excessivos request simultanêos que podem causar falha nos recursos da mesma. <br> 
-Considerámos esta ASVS um key issue a ser resolvido pois proteção contra pedidos excessivos na aplicação o que poderia levar a sobrecarga da mesma.
+Considerámos esta ASVS um key issue a ser resolvido pois proteção contra pedidos excessivos na aplicação o que poderia levar a sobrecarga da mesma. Para o teste desta ASVS foi usado a ferramenta curl para fazer pedidos em massa.
 
 ## Demonstração 
 Para garantir o controlo de request implementámos o seguinte limite com recurso à biblioteca flask-limiter: 

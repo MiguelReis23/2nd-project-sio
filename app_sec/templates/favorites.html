@@ -33,6 +33,7 @@
                 <button class="view-product">Ver Produto</button>
             </form>
             <form action="/favorites/remove/{{product.id}}" method="POST">
+                {{wishrem.csrf_token}}
                 <button class="remove-button">Remove</button>
                 </form>
         </div>

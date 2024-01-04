@@ -27,6 +27,7 @@
         <div class="checkout-form">
             <h1>Checkout</h1>
             <form action="/cart/checkout/confirm" method="POST">
+				{{confirm.csrf_token}}
 				<div class="form-group">
 					<label for="name">Name:</label>
 					<input type="text" id="name" name="name" required>

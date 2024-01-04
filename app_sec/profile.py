@@ -58,7 +58,7 @@ def edit_profile():
     confirm_new_password = request.form.get('confirm_new_password')
 
     
-    common_passwords = open('PASSWORDS.txt', 'r', encoding='utf-8')
+    common_passwords = open('app_sec/static/assets/PASSWORDS.txt', 'r', encoding='utf-8')
     password_hash = hashlib.sha1(new_password.encode('utf-8')).hexdigest().upper()
     prefix, suffix = password_hash[:5], password_hash[5:]
 

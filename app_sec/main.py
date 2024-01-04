@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import login_user, logout_user, login_required, current_user
 from app_sec.models import User, Product
+from app_sec.models import AddToWishlistForm, AddToCartForm
 from app_sec import db
 from flask import request, redirect, url_for
 main = Blueprint('main', __name__)
@@ -9,25 +10,31 @@ main = Blueprint('main', __name__)
 @main.route('/', methods=['GET'])
 @login_required
 def index():
+    wishadd=AddToWishlistForm()
+    cartadd=AddToCartForm()
     user=User.query.filter_by(id=current_user.id).first()
     products = Product.query.all()
-    return render_template('index.html',user=user, products=products)
+    return render_template('index.html',user=user, products=products,wishadd=wishadd,cartadd=cartadd)
 
 
 @main.route('/' , methods=['POST'])
 @login_required
 def index_post():
+    wishadd=AddToWishlistForm()
+    cartadd=AddToCartForm()
     products = Product.query.all()
-    return render_template('index.html', products=products)
+    return render_template('index.html', products=products,wishadd=wishadd,cartadd=cartadd)
 
 
 @main.route('/product/<int:product_id>', methods=['GET'])
 @login_required
 def product(product_id):
+    wishadd=AddToWishlistForm()
+    cartadd=AddToCartForm()
     product = Product.query.filter_by(id=product_id).first()
     if not product:
         return render_template('404.html')
-    return render_template('product.html', product=product)
+    return render_template('product.html', product=product,wishadd=wishadd,cartadd=cartadd)
 
 
 @main.route('/addproduct', methods=['GET'])

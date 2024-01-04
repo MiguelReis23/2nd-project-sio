@@ -27,10 +27,12 @@
             <p class="mb-3"><b>Description: </b>{{ product.description }}</p>
             <p class="mb-3">Price: {{ product.price|int }}€</p>
             <form action="/cart/add/{{product.id}}" method="POST">
+                {{cartadd.csrf_token}}
                 <button class="add-to-cart">
                     <i class='bx bx-cart-add'></i> Add to cart</button>
             </form>
             <form action="/favorites/add/{{product.id}}" method="POST">
+                {{wishadd.csrf_token}}
                 <button class="add-to-favorites">&#9733; Add to favorites </button>
             </form>
         </div>

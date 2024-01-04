@@ -1,6 +1,10 @@
 from datetime import datetime
 from flask_login import UserMixin
 from app_sec import db
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,3 +54,63 @@ class Wishlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    twofa_code = StringField('2facode', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
+
+class RegisterForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired()])
+    submit = SubmitField('Register')
+
+
+class ProfileForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired()])
+    first_name = StringField('First name')
+    last_name = StringField('Last name')
+    phone_number = StringField('Phone number')
+    address = StringField('Address')
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    new_password = PasswordField('New password')
+    confirm_password = PasswordField('Confirm new password')
+    username = StringField('Username')
+    submit = SubmitField('Save changes')
+
+
+class AddToWishlistForm(FlaskForm):
+    submit = SubmitField('Add to wishlist')
+
+class RemoveFromWishlistForm(FlaskForm):
+    submit = SubmitField('Remove from wishlist')
+
+class AddToCartForm(FlaskForm):
+    submit = SubmitField('Add to cart')
+
+class RemoveFromCartForm(FlaskForm):
+    submit = SubmitField('Remove from cart')
+
+class UpdateCartForm(FlaskForm):
+    submit = SubmitField('Update cart')
+
+class CheckoutForm(FlaskForm):
+    submit = SubmitField('Checkout')
+
+class CheckoutConfirmForm(FlaskForm):
+    submit = SubmitField('Confirm checkout')
+
+class AddProductForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    price = StringField('Price', validators=[DataRequired()])
+    description = StringField('Description')
+    image = StringField('Image')
+    category = StringField('Category', validators=[DataRequired()])
+    submit = SubmitField('Add product')
+
+

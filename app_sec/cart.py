@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, Flask
 from flask_login import login_required, current_user    
-from app_sec.models import User
-from app_sec.models import Product
-from app_sec.models import Cart
-
+from app_sec.models import User, Product, Cart
+from app_sec.models import RemoveFromCartForm, CheckoutForm, CheckoutConfirmForm, UpdateCartForm
 
 from app_sec import db
 import os
@@ -14,6 +12,9 @@ crt= Blueprint('cart', __name__)
 @crt.route('/cart', methods=['GET'])
 @login_required
 def cart():
+    update=UpdateCartForm()
+    remove=RemoveFromCartForm()
+    checkout=CheckoutForm()
     user=User.query.get(current_user.id)
     cart = Cart.query.filter_by(user_id=current_user.id).all()
     product_details = [ Product.query.filter_by(id=cart_item.product_id).first() for cart_item in cart ]
@@ -24,7 +25,7 @@ def cart():
     print("---------AAAA")
     for product in product_details:
         print(product.image)
-    return render_template('cart.html', user=user, CartItem=CartItem,total=total)
+    return render_template('cart.html', user=user, CartItem=CartItem,total=total,cartupdate=update, cartremove=remove, checkout=checkout)
 
 
 @crt.route('/cart/add/<int:product_id>', methods=['POST'])
@@ -84,14 +85,15 @@ def update_cart(product_id):
     return redirect(url_for('cart.cart'))
 
 
-@crt.route('/cart/checkout', methods=['POST'])
+@crt.route('/cart/checkout', methods=['GET','POST'])
 @login_required
 def checkout():
+    confirm=CheckoutConfirmForm()
     user=User.query.get(current_user.id)
     cart = Cart.query.filter_by(user_id=current_user.id).all()
     CartItem = [(Product.query.get(cart_item.product_id), cart_item.quantity) for cart_item in cart]
     total=sum([product.price*quantity for product,quantity in CartItem])
-    return render_template('checkout.html', user=user,total=total)
+    return render_template('checkout.html', user=user,total=total,confirm=confirm)
 
 
 

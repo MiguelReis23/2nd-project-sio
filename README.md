@@ -74,7 +74,7 @@ pip install -r requirements.txt
 
 
 ```bash
-./run.sh app <PORT>
+./run.sh app_org <PORT>
 ```
 or:
 ```bash
@@ -84,7 +84,7 @@ or:
 &emsp;&emsp;In Windows use instead:
 
 ```bash
-.\run.bat app <PORT>
+.\run.bat app_org <PORT>
 ```
 or:
 ```bash
