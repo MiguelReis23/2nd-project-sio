@@ -30,7 +30,7 @@
 
 - 11.1.4 
 
-- 14.2.3 
+- 14.2.3 e 10.3.2
 
 3. Features
 
@@ -366,10 +366,10 @@ limiter.limit("500 per day")(cart_blueprint)
 limiter.limit("50 per day")(auth_blueprint)
 ``` 
 
-## ASVS - 14.2.3 
+## ASVS - 14.2.3 e 10.3.2
 
 A ASVS - 14.2.3 garante que todos os serviços externos à aplicação são validados em termos de integridade. <br> 
-Escolhemos esta ASVS como um dos key issues de forma que todos os recursos externos ao nosso site não possam ser falsificados, garantindo que não teremos qualquer tipo de problema de segurança por parte de recursos externos utilizados. 
+Escolhemos estas ASVS's como um dos key issues de forma que todos os recursos externos ao nosso site não possam ser falsificados, garantindo que não teremos qualquer tipo de problema de segurança por parte de recursos externos utilizados. 
 
 ## Demonstração 
 Exemplo de como a verificação de integridade foi feita: 
