@@ -55,7 +55,7 @@ def edit_profile():
     current_email = user.email
     old_password = request.form.get('old_password')
     new_password = request.form.get('new_password')
-    confirm_new_password = request.form.get('confirm_new_password')
+    confirm_new_password = request.form.get('confirm_password')
 
     
     common_passwords = open('app_sec/static/assets/PASSWORDS.txt', 'r', encoding='utf-8')

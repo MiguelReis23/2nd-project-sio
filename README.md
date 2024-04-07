@@ -3,6 +3,8 @@
 This project was developed for the course of Information And Organisational Security (SIO) and the goal was to present a web application that would be an online shop to sell DETI memorabilia,
 The purpose of this delivery was to work upon the first delivery of the project, improving the security of the application and adding new features.
 
+Grade: 20
+
 ## Authors
 
 - GABRIEL JANICAS DA SILVA **108689**<br>
@@ -45,9 +47,9 @@ From the list of software features given by the teacher, we implemented the foll
 
 - Password strength evaluation, requiring at least 12 characters and at most 128 according to v2.1 of the ASVS and breach verification with resource of Have I Been Pwned API.
 
--Multi-factor authentication impemented with TOTP (Time-based One-Time Password) to authorize access to the application.
+- Multi-factor authentication impçemented with TOTP (Time-based One-Time Password) to authorize access to the application.
 
--Encryption of sensitive data in the database including passwords and the key used to generate the TOTP.
+- Encryption of sensitive data in the database including passwords and the key used to generate the TOTP.
 
 
 ## RUN

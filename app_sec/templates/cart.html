@@ -13,7 +13,7 @@
 
 <head>
 	<title>Cart</title>
-	<link rel="stylesheet" href="css/car.css">
+	<link rel="stylesheet" href="css/cart.css">
 </head>
 <body>
 	{% for message in get_flashed_messages() %}
@@ -80,7 +80,7 @@
 				  </div>
 				  <footer>
 					<span>Total</span>
-					<span>€</span>
+					<span>{{total}}€</span>
 				  </footer>
 				</div>
 				<form class="botao" action="/cart/checkout" method="POST">
